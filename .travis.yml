@@ -3,13 +3,17 @@ language: python
 python:
   - "3.5"
 
+branches:
+  only:
+    - "master"
+
 install:
-  - pip install Django
-  - pip install Constellation-Base
-  - pip install django-guardian
   - pip install flake8
+  - pip install -e .
 
-before_script:
-  - flake8 constellation_forms 
+addons:
+  postgresql: "9.4"
 
-script: python manage.py test
+script:
+  - flake8 constellation_forms
+  - python manage.py test

@@ -19,6 +19,7 @@ setup(
     install_requires=[
         'constellation_base>=0.1.3',
         'django-guardian',
+        'psycopg2',
     ],
     classifiers=[
         'Environment :: Web Environment',
