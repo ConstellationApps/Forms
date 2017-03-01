@@ -1,0 +1,15 @@
+---
+language: python
+python:
+  - "3.5"
+
+install:
+  - pip install Django
+  - pip install Constellation-Base
+  - pip install django-guardian
+  - pip install flake8
+
+before_script:
+  - flake8 constellation_forms 
+
+script: python manage.py test
