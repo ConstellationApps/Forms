@@ -1,0 +1,81 @@
+{% extends "constellation_base/base.html" %}
+
+{% block title %}{{ template_settings.organization }} -- Create Form{% endblock %}
+
+{% block head %}
+{{ block.super }}
+{% load static %}
+<link rel="stylesheet" href="{% static 'constellation_forms/css/forms.css' %}">
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+{% load static %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.5.1/Sortable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+    var widgetPath = "{% static 'constellation_forms/js/widgets/' %}";
+</script>
+<script src="{% static 'constellation_forms/js/create-form.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="mdl-grid board" id="board" style="width:100%">
+    <div class="mdl-cell mdl-cell--9-col mdl-shadow--2dp" id="form-pane">
+        <form action="#" id="form-title" class="form-part active-form-part mdl-grid no-drag">
+            <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col huge-textfield">
+                <input class="mdl-textfield__input" type="text" id="form-title" name="title">
+                <label class="mdl-textfield__label" for="form-title">Form Title</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col">
+                <input class="mdl-textfield__input" type="text" id="form-description" name="description">
+                <label class="mdl-textfield__label" for="form-description">Form Description</label>
+            </div>
+        </form>
+        <div id="widgets-holder">
+        </div>
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent form-submit" onclick="submitForm()">
+            Create Form
+        </button>
+    </div>
+    <div id="right-sidebar" class="mdl-cell mdl-cell--3-col">
+        <div class="small-card mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Elements</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                <ul class="widget-list mdl-list">
+                    <li class="mdl-list__item" onclick="addWidget('textfield')">
+                        <span class="mdl-list__item-primary-content">
+                            <i class="material-icons mdl-list__item-icon">add_box</i>
+                            Text Field
+                        </span>
+                    </li>
+                    <li class="mdl-list__item" onclick="addWidget('selectfield')">
+                        <span class="mdl-list__item-primary-content">
+                            <i class="material-icons mdl-list__item-icon">add_box</i>
+                            Select Field
+                        </span>
+                    </li>
+                    <li class="mdl-list__item" onclick="addWidget('datefield')">
+                        <span class="mdl-list__item-primary-content">
+                            <i class="material-icons mdl-list__item-icon">add_box</i>
+                            Date Field
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="small-card mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Form Options</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                <form action="#" class="form-options" id="form-options">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

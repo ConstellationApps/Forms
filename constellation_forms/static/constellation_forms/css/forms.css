@@ -1,0 +1,114 @@
+.small-card {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.widget-list {
+    margin: 0;
+}
+
+.widget-list .mdl-list__item {
+    min-height: 30px;
+    padding: 0 16px;
+}
+
+.form-options .mdl-switch {
+    margin-bottom: 10px;
+}
+
+.huge-textfield .mdl-textfield__input {
+    font-size: 40px;
+}
+
+.huge-textfield .mdl-textfield__label {
+    font-size: 40px;
+    line-height: 40px;
+    top: 31px;
+}
+
+.form-part {
+    border-bottom: 1px solid #dddddd;
+    padding: 16px;
+    position: relative;
+}
+
+/* Fast transition for box-shadow */
+.form-part::after {
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.2);
+    content: "";
+    height: 100%;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    position: absolute;
+    transition: opacity 0.2s ease-in-out;
+    width: 100%;
+    z-index: -1;
+}
+
+.active-form-part::after {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.choices-list .mdl-list__item {
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+
+.form-part .mdl-textfield {
+    margin-bottom: -10px;
+    margin-top: -10px;
+}
+
+.choices-list .mdl-textfield {
+    margin-bottom: -20px;
+    margin-top: -20px;
+}
+
+.widget-type {
+    color: #aaaaaa;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: right;
+}
+
+.form-extra {
+    background-color: #f2f2f2;
+    height: 0;
+    margin: 5px -16px -16px -16px;
+    overflow: hidden;
+    padding: 0 16px;
+    transition: height .3s;
+    width: calc(100% + 32px)
+}
+
+.form-extra-items {
+    margin-left: 30px;
+    text-align: right;
+}
+
+.form-extra-items i {
+    cursor: pointer;
+}
+
+.active-form-part .form-extra {
+    height: 35px;
+    transition: height .3s;
+}
+
+.drag-handle-holder {
+    color: #aaaaaa;
+    cursor: move;
+    height: 20px;
+    margin: -20px 0 0 0;
+    padding: 0;
+    text-align: center;
+    z-index: 2;
+}
+
+.form-submit {
+    float: right;
+    margin: 10px;
+}
