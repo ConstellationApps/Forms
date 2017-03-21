@@ -2,17 +2,22 @@
 /* exported addWidget deleteWidget addChoice deleteChoice submitForm */
 
 
-/* Enable dragging items around
-*/
+/*
+ * Enable dragging items around
+ */
 Sortable.create(document.getElementById('widgets-holder'), {
   animation: 150,
   handle: '.drag-handle',
 });
 
 
+/*
+ * Highlight active widget
+ */
 $('.form-part').click(function() {
   activateFormPart($(this));
 });
+
 
 /**
  * Detect when the user has clicked on a widget and apply some styling to
@@ -31,14 +36,15 @@ function activateFormPart(part) {
  */
 function addWidget(widgetName) {
   addWidget.count = ++addWidget.count || 1;       // Like a static var
-  T.render(widgetName, function(t) {
-    let template = $(t({'id': addWidget.count})).appendTo($('#widgets-holder'));
-    template.click(function() {
-      activateFormPart($(this));
-    });
-    activateFormPart(template);
-    componentHandler.upgradeDom();
+  let template = $.handlebarTemplates[widgetName]({
+    'id': addWidget.count,
   });
+  let widget = $(template).appendTo($('#widgets-holder'));
+  widget.click(function() {
+    activateFormPart($(this));
+  });
+  activateFormPart(widget);
+  componentHandler.upgradeDom();
 }
 
 /**
@@ -132,51 +138,17 @@ function submitForm() {
   });
 }
 
-/* Get an external handlebars template.  Heavily inspired by
- * https://github.com/wycats/handlebars.js/issues/82#issuecomment-1512583
- */
+let templateList = [
+  widgetPath + 'textfield.hbs',
+  widgetPath + 'datefield.hbs',
+  widgetPath + 'selectfield.hbs',
+];
 
-let Template = function() {
-  this.cached = {};
-};
+let partialList = [
+  widgetPath + 'commonpartials.hbs',
+];
 
-let T = new Template();
-$.extend(Template.prototype, {
-  render: function(name, callback) {
-    if (T.isCached(name)) {
-      callback(T.cached[name]);
-    } else {
-      $.get(T.urlFor(name), function(raw) {
-        T.store(name, raw);
-        T.render(name, callback);
-      });
-    }
-  },
-  renderSync: function(name, callback) {
-    if (!T.isCached(name)) {
-      T.fetch(name);
-    }
-    T.render(name, callback);
-  },
-  prefetch: function(name) {
-    $.get(T.urlFor(name), function(raw) {
-      T.store(name, raw);
-    });
-  },
-  fetch: function(name) {
-    // synchronous, for those times when you need it.
-    if (! T.isCached(name)) {
-      let raw = $.ajax({'url': T.urlFor(name), 'async': false}).responseText;
-      T.store(name, raw);
-    }
-  },
-  isCached: function(name) {
-    return !!T.cached[name];
-  },
-  store: function(name, raw) {
-    T.cached[name] = Handlebars.compile(raw);
-  },
-  urlFor: function(name) {
-    return widgetPath + name + '.handlebars.html';
-  },
+$(document).autoBars({
+  main_template_from_list: templateList,
+  partial_template_from_list: partialList,
 });

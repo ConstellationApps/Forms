@@ -1,0 +1,22 @@
+<form action="#" class="form-part mdl-grid" id="form-part-{{ id }}">
+    {{> widgetHeader name="Select Field" }}
+    {{> widgetMeta name="Select Field" type="selectfield" }}
+    <ul id="choices-list-{{ id }}" class="mdl-list mdl-cell--12-col choices-list mdl-cell--order-3">
+        <li class="mdl-list__item">
+            <span class="mdl-list__item-primary-content">
+                <i class="material-icons">check_box</i>
+                <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--4-col">
+                    <input class="mdl-textfield__input" type="text" name="choice-1" id="selectfield-choice-{{ id }}-1">
+                    <label class="mdl-textfield__label" for="selectfield-choice-{{ id }}-1">Choice</label>
+                </div>
+                <button class="mdl-button mdl-js-button mdl-button--icon delete-choice" onclick="deleteChoice(this)" disabled>
+                    <i class="material-icons">clear</i>
+                </button>
+            </span>
+        </li>
+    </ul>
+    <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-cell--order-3" onclick="addChoice({{ id }})">
+        <i class="material-icons ">add_circle</i> Add
+    </button>
+    {{> widgetExtra }}
+</form>
