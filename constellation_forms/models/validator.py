@@ -1,17 +1,16 @@
-"""
-Validator Database Model
-
-Attributes:
-    * name - name of validator
-    * regex - regex for validator
-"""
-
 from django.core.exceptions import ValidationError
 from django.db import models
 import re
 
 
 class Validator(models.Model):
+    """
+    Validator Database Model
+
+    Attributes:
+        * name - name of validator
+        * regex - regex for validator
+    """
     name = models.TextField()
     regex = models.TextField()
 

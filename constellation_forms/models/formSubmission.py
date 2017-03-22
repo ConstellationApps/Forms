@@ -1,18 +1,3 @@
-"""
-Form Submission Database Model
-
-A form submission object is a specific, submitted/drafted instance of a form.
-
-Attributes:
-    * form - the specific form instance that the submission references
-    * state - the state field specifies the current status for the submission.
-        may be one of ["draft", "submitted", "approved", or "denied"]
-    * modified - last date modified
-    * owner - user submitting the form
-    * submission - serialized submission information
-        + Array indexes MUST match the form elements.
-"""
-
 from .form import Form
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
@@ -22,6 +7,22 @@ import re
 
 
 class FormSubmission(models.Model):
+    """Form Submission Database Model
+
+    A form submission object is a specific, submitted/drafted instance
+    of a form.
+
+    Attributes:
+        * form - the specific form instance that the submission references
+        * state - the state field specifies the current status for the
+            submission.  may be one of:
+            ["draft", "submitted", "approved", or "denied"]
+        * modified - last date modified
+        * owner - user submitting the form
+        * submission - serialized submission information
+            + Array indexes MUST match the form elements.
+    """
+
     states = (
         (0, "draft"),
         (1, "submitted"),
@@ -55,6 +56,7 @@ class FormSubmission(models.Model):
         ordering = ("-modified",)
 
     def __str__(self):
+        """<form name>: <modified date> <owner> <state>"""
         return "{0}: {1} {2} {3}".format(self.form, self.modified, self.owner,
                                          self.state)
 
