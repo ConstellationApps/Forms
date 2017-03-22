@@ -7,7 +7,6 @@ choices and engineering goals.
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   :glob:
 
-   Form
-   FormSubmission
-   Validator
+   models/*
