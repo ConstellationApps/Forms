@@ -9,4 +9,4 @@ choices and engineering goals.
    :caption: Contents:
    :glob:
 
-   models/*
+   models/index.rst
