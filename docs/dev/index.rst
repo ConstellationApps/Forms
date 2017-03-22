@@ -10,3 +10,4 @@ choices and engineering goals.
    :glob:
 
    models/index.rst
+   views.rst
