@@ -18,9 +18,11 @@ class Validator(models.Model):
         db_table = 'validators'
 
     def __str__(self):
+        """<name> (<regex>)"""
         return "{0} ({1})".format(self.name, self.regex)
 
     def clean(self):
+        """Confirm the validator is usable by trying to compile it"""
         try:
             re.compile(self.regex)
         except:

@@ -7,20 +7,24 @@ import re
 
 
 class FormSubmission(models.Model):
-    """Form Submission Database Model
+    """
+    Form Submission Database Model
 
-    A form submission object is a specific, submitted/drafted instance
-    of a form.
+    A Form Submission instance is a particular version of a form that is
+    partially filled out by a user of the system.  Form Submissions may
+    have statuses attached to them such as Draft or Submitted.  A
+    submission is frozen in time to a particular version of the form so
+    that if a later version of a form is released, the version that was
+    started remains available.
 
     Attributes:
-        * form - the specific form instance that the submission references
-        * state - the state field specifies the current status for the
-            submission.  may be one of:
-            ["draft", "submitted", "approved", or "denied"]
-        * modified - last date modified
-        * owner - user submitting the form
-        * submission - serialized submission information
-            + Array indexes MUST match the form elements.
+
+    * form - the specific form instance that the submission references
+    * state - the state field as specified by the 'states' list below
+    * modified - last date modified
+    * owner - user submitting the form
+    * submission - serialized submission information
+
     """
 
     states = (
