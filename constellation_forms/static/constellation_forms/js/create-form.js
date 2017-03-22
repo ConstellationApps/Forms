@@ -141,7 +141,12 @@ function submitForm() {
 let templateList = [
   widgetPath + 'textfield.hbs',
   widgetPath + 'datefield.hbs',
-  widgetPath + 'selectfield.hbs',
+  widgetPath + 'multifield.hbs',
+  widgetPath + 'paragraph.hbs',
+  widgetPath + 'boolean.hbs',
+  widgetPath + 'scale.hbs',
+  widgetPath + 'signature.hbs',
+  widgetPath + 'instructions.hbs',
 ];
 
 let partialList = [

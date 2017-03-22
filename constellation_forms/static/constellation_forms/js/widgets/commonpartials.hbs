@@ -20,6 +20,7 @@
 
 <!--#?widgetMeta-->
 <input type="hidden" name="type" value="{{ type }}">
+{{#unless noFields}}
 <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--8-col mdl-cell--order-1">
     <input class="mdl-textfield__input" type="text" id="{{ type }}-title-{{ id }}" name="title">
     <label class="mdl-textfield__label" for="{{ type }}-title-{{ id }}">{{ name }} Title</label>
@@ -28,4 +29,5 @@
     <input class="mdl-textfield__input" type="text" id="{{ type }}-description-{{ id }}" name="description">
     <label class="mdl-textfield__label" for="{{ type }}-description-{{ id }}">{{ name }} Description</label>
 </div>
+{{/unless}}
 <!--#?end-->

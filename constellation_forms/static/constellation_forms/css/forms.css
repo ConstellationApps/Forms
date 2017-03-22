@@ -112,3 +112,22 @@
     float: right;
     margin: 10px;
 }
+
+.multi-selector {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAGFBMVEWqqqqxsbHW1tbX19fZ2dn5+fn+/v7////OGFuhAAAARElEQVR4AbXKSwqAQBAD0cwn5v43FtGioXE7tXyU8tMRnEOtMeVSzEopFqUUexDFXkSx6EKx70QxMFnSShp6bzekc3gDO/IIDIAFA64AAAAASUVORK5CYII=') no-repeat;
+    background-position: left 10px center;
+    background-size: 20px;
+    border: 1px solid #cccccc;
+    color: inherit;
+    font: inherit;
+    font-size: inherit;
+    padding: 0 3px 0 23px;
+    text-align: right;
+}
+
+select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #aaa;
+}
