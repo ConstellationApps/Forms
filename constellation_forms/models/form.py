@@ -54,10 +54,17 @@ import re
 
 class Form(models.Model):
     element_types = [
-        "text",
+        "boolean",
+        "checkbox",
         "date",
-        "choice",
-        "multichoice",
+        "dropdown",
+        "instructions",
+        "paragraph",
+        "radio",
+        "signature",
+        "slider",
+        "stars",
+        "text",
     ]
 
     form_id = models.IntegerField()
