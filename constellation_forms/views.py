@@ -2,7 +2,10 @@ from django.contrib.auth.models import Group
 from django.shortcuts import render
 from django.views import View
 from constellation_base.models import GlobalTemplateSettings
-from .models import Form
+from .models import (
+    Form,
+    FormSubmission
+)
 
 import json
 
@@ -68,3 +71,31 @@ class manage_create_form(View):
         except:
             # invalid form
             pass
+
+
+def list_forms(request):
+        ''' Returns a page that includes a list of available forms '''
+        template_settings = GlobalTemplateSettings(allowBackground=False)
+        template_settings = template_settings.settings_dict()
+        groups = [(g.name, g.pk) for g in Group.objects.all()]
+        forms = Form.objects.all()
+
+        return render(request, 'constellation_forms/list-forms.html', {
+            'groups': groups,
+            'template_settings': template_settings,
+            'forms': forms
+        })
+
+
+def list_submissions(request):
+        ''' Returns a page that includes a list of submitted forms '''
+        template_settings = GlobalTemplateSettings(allowBackground=False)
+        template_settings = template_settings.settings_dict()
+        groups = [(g.name, g.pk) for g in Group.objects.all()]
+        submissions = FormSubmission.objects.all()
+
+        return render(request, 'constellation_forms/list-submissions.html', {
+            'groups': groups,
+            'template_settings': template_settings,
+            'submissions': submissions
+        })
