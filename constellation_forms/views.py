@@ -24,7 +24,7 @@ class manage_create_form(View):
 
     def post(self, request):
         ''' Creates a form '''
-        form_data = json.dumps(request.POST['data'])
+        form_data = json.loads(request.POST['data'])
         title = form_data['meta']['title']
         description = form_data['meta']['description']
         widgets = []
@@ -65,23 +65,30 @@ class manage_create_form(View):
             description=description,
             elements=widgets,
         )
-        try:
-            new_form.full_clean()
-            new_form.save()
-        except:
-            # invalid form
-            pass
+        new_form.full_clean()
+        new_form.save()
+
+
+class view_form(View):
+    def get(self, request, form_id):
+        ''' Returns a page that allows for the submittion of a created form '''
+        template_settings = GlobalTemplateSettings(allowBackground=False)
+        template_settings = template_settings.settings_dict()
+        form = Form.objects.filter(form_id=form_id).first()
+
+        return render(request, 'constellation_forms/submit-form.html', {
+            'form': form,
+            'template_settings': template_settings,
+        })
 
 
 def list_forms(request):
         ''' Returns a page that includes a list of available forms '''
         template_settings = GlobalTemplateSettings(allowBackground=False)
         template_settings = template_settings.settings_dict()
-        groups = [(g.name, g.pk) for g in Group.objects.all()]
         forms = Form.objects.all()
 
         return render(request, 'constellation_forms/list-forms.html', {
-            'groups': groups,
             'template_settings': template_settings,
             'forms': forms
         })
@@ -91,11 +98,9 @@ def list_submissions(request):
         ''' Returns a page that includes a list of submitted forms '''
         template_settings = GlobalTemplateSettings(allowBackground=False)
         template_settings = template_settings.settings_dict()
-        groups = [(g.name, g.pk) for g in Group.objects.all()]
         submissions = FormSubmission.objects.all()
 
         return render(request, 'constellation_forms/list-submissions.html', {
-            'groups': groups,
             'template_settings': template_settings,
             'submissions': submissions
         })

@@ -1,0 +1,41 @@
+{% extends "constellation_base/base.html" %}
+
+{% block title %}{{ template_settings.organization }} -- Submit Form{% endblock %}
+
+{% block head %}
+{{ block.super }}
+{% load static %}
+<link rel="stylesheet" href="{% static 'constellation_forms/css/forms.css' %}">
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+{% load static %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="{% static 'constellation_forms/js/submit-form.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="mdl-grid form" id="form" style="width:100%">
+    <div class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-grid" id="form-pane">
+        <div class="mdl-card__title form-title">
+            <h2>{{ form.name }}</h2>
+            <h4>{{ form.description }}</h4>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <div id="widget-holder">
+                {% for widget in form.elements %}
+                {% with "constellation_forms/widgets/"|add:widget.type|add:".html" as template %}
+                {% include template with widget=widget %}
+                {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent form-submit" onclick="submitForm()">
+                Submit Form
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

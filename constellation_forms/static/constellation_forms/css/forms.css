@@ -38,9 +38,9 @@
     content: "";
     height: 100%;
     left: 0;
-    top: 0;
     opacity: 0;
     position: absolute;
+    top: 0;
     transition: opacity 0.2s ease-in-out;
     width: 100%;
     z-index: -1;
@@ -130,4 +130,8 @@
 select:-moz-focusring {
     color: transparent;
     text-shadow: 0 0 0 #aaa;
+}
+
+.form-title {
+    display: block;
 }
