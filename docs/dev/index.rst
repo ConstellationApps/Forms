@@ -8,6 +8,7 @@ choices and engineering goals.
    :maxdepth: 2
    :caption: Contents:
 
+   style
    models/index
    views
    roadmap
