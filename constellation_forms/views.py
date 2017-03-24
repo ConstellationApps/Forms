@@ -1,7 +1,9 @@
 from django.contrib.auth.models import Group
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.utils import timezone
 from django.views import View
+from django.urls import reverse
 from constellation_base.models import GlobalTemplateSettings
 from .models import (
     Form,
@@ -55,7 +57,7 @@ class manage_create_form(View):
 
         # This is not safe, but it will work for now...
         if Form.objects.all().count() > 0:
-            form_id = Form.objects.all().order_by("-form_id")[0] + 1
+            form_id = Form.objects.all().order_by("-form_id")[0].form_id + 1
         else:
             form_id = 1
 
@@ -68,6 +70,7 @@ class manage_create_form(View):
         )
         new_form.full_clean()
         new_form.save()
+        return HttpResponse(reverse('view_list_forms'))
 
 
 class view_form(View):
@@ -98,6 +101,7 @@ class view_form(View):
         )
         new_submission.full_clean()
         new_submission.save()
+        return HttpResponse(reverse('view_list_submissions'))
 
 
 class view_form_submission(View):
@@ -133,7 +137,8 @@ def list_forms(request):
         return render(request, 'constellation_forms/list.html', {
             'template_settings': template_settings,
             'list_type': 'Forms',
-            'list_items': forms
+            'list_items': forms,
+            'url': reverse('view_form', args=[0])[:-2],
         })
 
 
@@ -144,11 +149,13 @@ def list_submissions(request):
         submissions = FormSubmission.objects.all()
         submissions = [{
             "name": f.form.name,
-            "description": f.modified
+            "description": f.modified,
+            "pk": f.pk
         } for f in submissions]
 
         return render(request, 'constellation_forms/list.html', {
             'template_settings': template_settings,
             'list_type': 'Form Submissions',
-            'list_items': submissions
+            'list_items': submissions,
+            'url': reverse('view_form_submission', args=[0])[:-2],
         })

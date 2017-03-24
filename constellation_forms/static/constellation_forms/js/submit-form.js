@@ -8,7 +8,6 @@ function submitForm() {
   let i = 0;
   let csrfToken = $.cookie('csrftoken');
   $('#widgets-holder').find('form').each(function() {
-    console.log($(this).serializeArray());
     widgetForm.widgets[i++] = $(this).serializeArray()[0]['value'];
   });
   let data = {
@@ -16,6 +15,6 @@ function submitForm() {
     'data': JSON.stringify(widgetForm),
   };
   $.post($(location).attr('href'), data, function(response) {
-    window.location.href = response.url;
+    window.location.href = '/forms/view/list-submissions';
   });
 }

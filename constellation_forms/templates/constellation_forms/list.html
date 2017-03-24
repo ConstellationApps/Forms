@@ -12,7 +12,7 @@
       {% for item in list_items %}
       <div class="mdl-list__item">
         <span class="mdl-list__item-primary-content">
-          <a href="#">{{ item.name }}</a>
+          <a href="{{ url }}/{{ item.pk }}">{{ item.name }}</a>
         </span>
         <span class="mdl-list__item-secondary-content">
           {{ item.description }}

@@ -134,7 +134,7 @@ function submitForm() {
     'data': JSON.stringify(widgetForm),
   };
   $.post($(location).attr('href'), data, function(response) {
-    window.location.href = response.url;
+    window.location.href = '/forms/view/list-forms';
   });
 }
 
