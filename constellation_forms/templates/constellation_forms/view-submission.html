@@ -1,0 +1,31 @@
+{% extends "constellation_base/base.html" %}
+
+{% block title %}{{ template_settings.organization }} -- View Submission{% endblock %}
+
+{% block head %}
+{{ block.super }}
+{% load static %}
+<link rel="stylesheet" href="{% static 'constellation_forms/css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="mdl-grid form" id="form" style="width:100%">
+    <div class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-grid" id="form-pane">
+        <div class="mdl-card__title form-title">
+            <h2>{{ name }}</h2>
+            <h4>{{ description }}</h4>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <div id="widgets-holder">
+                {% for widget in widgets %}
+                <form>
+                    {% with "constellation_forms/submission_widgets/"|add:widget.type|add:".html" as template %}
+                    {% include template with widget=widget %}
+                    {% endwith %}
+                </form>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

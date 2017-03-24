@@ -135,3 +135,7 @@ select:-moz-focusring {
 .form-title {
     display: block;
 }
+
+.submission-text {
+    text-decoration: underline;
+}

@@ -109,7 +109,7 @@ class view_form_submission(View):
         submission_data = []
         for index, value in enumerate(submission.submission):
             element = {}
-            for tag in ('title', 'description', 'type'):
+            for tag in ('name', 'description', 'type'):
                 if tag not in submission.form.elements[index]:
                     continue
                 element[tag] = submission.form.elements[index][tag]
@@ -118,7 +118,7 @@ class view_form_submission(View):
 
         return render(request, 'constellation_forms/view-submission.html', {
             'template_settings': template_settings,
-            'name': submission.form.title,
+            'name': submission.form.name,
             'description': submission.form.description,
             'widgets': submission_data,
         })
