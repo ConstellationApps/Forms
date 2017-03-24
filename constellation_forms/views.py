@@ -81,6 +81,22 @@ class view_form(View):
             'template_settings': template_settings,
         })
 
+    def post(self, request, form_id):
+        ''' Creates a form '''
+        form = Form.objects.get(form_id=form_id)
+        form_data = json.loads(request.POST['data'])
+        user = request.user
+        state = 1  # submitted
+
+        new_submission = FormSubmission(
+            form=form,
+            owner=user,
+            state=state,
+            submission=form_data
+        )
+        new_submission.full_clean()
+        new_submission.save()
+
 
 def list_forms(request):
         ''' Returns a page that includes a list of available forms '''
