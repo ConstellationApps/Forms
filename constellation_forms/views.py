@@ -100,6 +100,30 @@ class view_form(View):
         new_submission.save()
 
 
+class view_form_submission(View):
+    def get(self, request, form_submission_id):
+        ''' Returns a page that displays a specific form submission instance'''
+        template_settings = GlobalTemplateSettings(allowBackground=False)
+        template_settings = template_settings.settings_dict()
+        submission = FormSubmission.objects.get(pk=form_submission_id)
+        submission_data = []
+        for index, value in enumerate(submission.submission):
+            element = {}
+            for tag in ('title', 'description', 'type'):
+                if tag not in submission.form.elements[index]:
+                    continue
+                element[tag] = submission.form.elements[index][tag]
+            element['value'] = value
+            submission_data.append(element)
+
+        return render(request, 'constellation_forms/view-submission.html', {
+            'template_settings': template_settings,
+            'name': submission.form.title,
+            'description': submission.form.description,
+            'widgets': submission_data,
+        })
+
+
 def list_forms(request):
         ''' Returns a page that includes a list of available forms '''
         template_settings = GlobalTemplateSettings(allowBackground=False)
