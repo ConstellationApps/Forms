@@ -88,9 +88,10 @@ def list_forms(request):
         template_settings = template_settings.settings_dict()
         forms = Form.objects.all()
 
-        return render(request, 'constellation_forms/list-forms.html', {
+        return render(request, 'constellation_forms/list.html', {
             'template_settings': template_settings,
-            'forms': forms
+            'list_type': 'Forms',
+            'list_items': forms
         })
 
 
@@ -100,7 +101,8 @@ def list_submissions(request):
         template_settings = template_settings.settings_dict()
         submissions = FormSubmission.objects.all()
 
-        return render(request, 'constellation_forms/list-submissions.html', {
+        return render(request, 'constellation_forms/list.html', {
             'template_settings': template_settings,
-            'submissions': submissions
+            'list_type': 'Form Submissions',
+            'list_items': submissions
         })

@@ -1,21 +1,21 @@
 {% extends "constellation_base/base.html" %}
 
-{% block title %}Forms | List Forms{% endblock %}
+{% block title %}Forms | List {{ list_type }}{% endblock %}
 
 {% block content %}
 <div id="formsCard" class="mdl-card mdl-cell--8-col mdl-cell--2-offset-desktop mdl-shadow--2dp mdl-grid">
   <div class="mdl-card__title">
-    <h2 class="mdl-card__title-text">Forms</h2>
+    <h2 class="mdl-card__title-text">{{ list_type }}</h2>
   </div>
   <div class="mdl-card__supporting-text">
     <div class="mdl-list">
-      {% for form in forms %}
+      {% for item in list_items %}
       <div class="mdl-list__item">
         <span class="mdl-list__item-primary-content">
-          <a href="#">{{form.name}}</a>
+          <a href="#">{{ item.name }}</a>
         </span>
         <span class="mdl-list__item-secondary-content">
-          {{form.description}}
+          {{ item.description }}
         </span>
       </div>
       {% endfor %}
