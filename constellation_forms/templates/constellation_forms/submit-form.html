@@ -23,11 +23,13 @@
             <h4>{{ form.description }}</h4>
         </div>
         <div class="mdl-card__supporting-text">
-            <div id="widget-holder">
+            <div id="widgets-holder">
                 {% for widget in form.elements %}
-                {% with "constellation_forms/widgets/"|add:widget.type|add:".html" as template %}
-                {% include template with widget=widget %}
-                {% endwith %}
+                <form>
+                    {% with "constellation_forms/widgets/"|add:widget.type|add:".html" as template %}
+                    {% include template with widget=widget %}
+                    {% endwith %}
+                </form>
                 {% endfor %}
             </div>
         </div>

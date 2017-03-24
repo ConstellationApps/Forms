@@ -10,7 +10,10 @@ urlpatterns = [
 
     # View Functions
     url(r'^view/list-forms$', views.list_forms,
-        name="view_list_form"),
+        name="view_list_forms"),
+
+    url(r'^view/list-submissions$', views.list_submissions,
+        name="view_list_submissions"),
 
     url(r'^view/form/(?P<form_id>\d+)$', views.view_form.as_view(),
         name="view_form"),

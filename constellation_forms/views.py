@@ -1,5 +1,6 @@
 from django.contrib.auth.models import Group
 from django.shortcuts import render
+from django.utils import timezone
 from django.views import View
 from constellation_base.models import GlobalTemplateSettings
 from .models import (
@@ -84,7 +85,7 @@ class view_form(View):
     def post(self, request, form_id):
         ''' Creates a form '''
         form = Form.objects.get(form_id=form_id)
-        form_data = json.loads(request.POST['data'])
+        form_data = json.loads(request.POST['data'])['widgets']
         user = request.user
         state = 1  # submitted
 
@@ -92,7 +93,8 @@ class view_form(View):
             form=form,
             owner=user,
             state=state,
-            submission=form_data
+            submission=form_data,
+            modified=timezone.now()
         )
         new_submission.full_clean()
         new_submission.save()
@@ -116,6 +118,10 @@ def list_submissions(request):
         template_settings = GlobalTemplateSettings(allowBackground=False)
         template_settings = template_settings.settings_dict()
         submissions = FormSubmission.objects.all()
+        submissions = [{
+            "name": f.form.name,
+            "description": f.modified
+        } for f in submissions]
 
         return render(request, 'constellation_forms/list.html', {
             'template_settings': template_settings,
