@@ -7,6 +7,15 @@
   <div class="mdl-card__title">
     <h2 class="mdl-card__title-text">{{ list_type }}</h2>
   </div>
+  {% if list_type == 'Forms' %}
+  <div class="mdl-card__menu">
+    <a href="{% url 'manage_create_form' %}">
+      <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+        <i class="material-icons">add</i>
+      </button>
+    </a>
+  </div>
+  {% endif %}
   <div class="mdl-card__supporting-text">
     <div class="mdl-list">
       {% for item in list_items %}
