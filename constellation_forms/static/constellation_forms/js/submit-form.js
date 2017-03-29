@@ -8,7 +8,10 @@ function submitForm() {
   let i = 0;
   let csrfToken = $.cookie('csrftoken');
   $('#widgets-holder').find('form').each(function() {
-    widgetForm.widgets[i++] = $(this).serializeArray()[0]['value'];
+    let widget = $(this).serializeArray();
+    if (widget.length() > 0) {
+      widgetForm.widgets[i++] = $(this).serializeArray()[0]['value'];
+    }
   });
   let data = {
     'csrfmiddlewaretoken': csrfToken,

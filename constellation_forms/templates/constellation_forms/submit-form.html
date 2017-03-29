@@ -27,7 +27,7 @@
                 {% for widget in form.elements %}
                 <form>
                     {% with "constellation_forms/widgets/"|add:widget.type|add:".html" as template %}
-                    {% include template with widget=widget %}
+                    {% include template with widget=widget id=forloop.counter %}
                     {% endwith %}
                 </form>
                 {% endfor %}
