@@ -22,6 +22,25 @@ function validate(elem) {
 }
 
 /**
+ * Get values from a widget
+ */
+function getWidgetValue(widget) {
+  let inputs = widget.find('input');
+  if(inputs.length == 1) {
+    return widget.serializeArray()[0]['value'];
+  } else {
+    let returnArray = [];
+    for (const input of inputs) {
+      if(input.checked) {
+        returnArray.push($('label[for="' + input.id + '"] .mdl-checkbox__label')[0].textContent);
+      }
+    }
+    return returnArray;
+  }
+}
+
+
+/**
  * Collect the widgets and submit them to the backend
  */
 function submitForm() {
@@ -39,17 +58,18 @@ function submitForm() {
     }
     let widget = $(this).serializeArray();
     if (widget.length > 0) {
-      widgetForm.widgets[i++] = $(this).serializeArray()[0]['value'];
+      widgetForm.widgets[i++] = getWidgetValue($(this));
     }
   });
   if (!valid) {
     return false;
   }
+  console.log(widgetForm);
   let data = {
     'csrfmiddlewaretoken': csrfToken,
     'data': JSON.stringify(widgetForm),
   };
   $.post($(location).attr('href'), data, function(response) {
-    window.location.href = '/forms/view/list-submissions';
+    //    window.location.href = '/forms/view/list-submissions';
   });
 }
