@@ -139,3 +139,14 @@ select:-moz-focusring {
 .submission-text {
     text-decoration: underline;
 }
+
+/* Don't invalidate on first load */
+.mdl-textfield.is-invalid:not(.touched) .mdl-textfield__input {
+    border-color: rgba(0,0,0,.12);
+}
+.mdl-textfield--floating-label.is-invalid:not(.touched) .mdl-textfield__label, .mdl-textfield--floating-label.is-invalid:not(.touched) .mdl-textfield__error {
+    color: rgba(0,0,0,.26);
+}
+.mdl-textfield.touched + .mdl-checkbox input:invalid ~ .mdl-checkbox__box-outline {
+    border-color: red;
+}

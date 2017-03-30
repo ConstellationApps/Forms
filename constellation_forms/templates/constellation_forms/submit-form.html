@@ -11,7 +11,7 @@
 {% block js %}
 {{ block.super }}
 {% load static %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="{% static 'constellation_forms/js/submit-form.js' %}"></script>
 {% endblock %}
 
@@ -25,7 +25,7 @@
         <div class="mdl-card__supporting-text">
             <div id="widgets-holder">
                 {% for widget in form.elements %}
-                <form>
+                <form id="form-{{ forloop.counter }}" name="form-{{ forloop.counter }}">
                     {% with "constellation_forms/widgets/"|add:widget.type|add:".html" as template %}
                     {% include template with widget=widget id=forloop.counter %}
                     {% endwith %}
