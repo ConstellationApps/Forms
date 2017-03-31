@@ -3,7 +3,7 @@
     <input class="mdl-textfield__input" type="text" name="value" id="widget-{{ id }}"{% if widget.required %} required{% endif %}>
     <label class="mdl-textfield__label" for="widget-{{ id }}">Full Name</label>
 </div>
-<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-2">
-  <input type="checkbox" id="checkbox-2" class="mdl-checkbox__input"{% if widget.required %} required{% endif %}>
+<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="signature-checkbox-{{ id }}">
+  <input type="checkbox" id="signature-checkbox-{{ id }}" class="mdl-checkbox__input"{% if widget.required %} required{% endif %}>
   <span class="mdl-checkbox__label">By checking this box, the text box above becomes your signature.</span>
 </label>

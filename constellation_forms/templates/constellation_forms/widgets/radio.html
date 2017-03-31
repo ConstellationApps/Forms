@@ -1,0 +1,9 @@
+<h4>{{ widget.title }}</h4>
+{{ widget.description }}<br/>
+{% for choice in widget.choices %}
+<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="choice-{{ id }}-{{ forloop.counter }}">
+    <input type="radio" id="choice-{{ id }}-{{ forloop.counter }}" name="radio-{{ id }}" class="mdl-radio__button">
+    <span class="mdl-radio__label choice-label">{{ choice }}</span>
+</label>
+<br/>
+{% endfor %}

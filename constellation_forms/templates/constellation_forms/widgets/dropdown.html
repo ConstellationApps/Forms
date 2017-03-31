@@ -1,0 +1,14 @@
+<h4>{{ widget.title }}</h4>
+{{ widget.description }}<br/>
+<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
+    <input class="mdl-textfield__input" type="text" id="choice-{{ id }}" name="choice-{{ id }}" tabIndex="-1"{% if widget.required %} required{% endif %}>
+    <label for="choice-{{ id }}">
+        <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+    </label>
+    <label for="choice-{{ id }}" class="mdl-textfield__label">{{ widget.title }}</label>
+    <ul for="choice-{{ id }}" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+        {% for choice in widget.choices %}
+        <li class="mdl-menu__item" data-val="choice">{{ choice }}</li>
+        {% endfor %}
+    </ul>
+</div>

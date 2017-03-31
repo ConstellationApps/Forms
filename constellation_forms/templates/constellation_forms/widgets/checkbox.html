@@ -1,8 +1,8 @@
 <h4>{{ widget.title }}</h4>
 {{ widget.description }}<br/>
 {% for choice in widget.choices %}
-<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="choice-{{ forloop.counter }}">
-    <input type="checkbox" id="choice-{{ forloop.counter }}" name="choice-{{ forloop.counter }}" class="mdl-checkbox__input">
-    <span class="mdl-checkbox__label">{{ choice }}</span>
+<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="choice-{{ id }}-{{ forloop.counter }}">
+    <input type="checkbox" id="choice-{{ id }}-{{ forloop.counter }}" name="choice-{{ forloop.counter }}" class="mdl-checkbox__input">
+    <span class="mdl-checkbox__label choice-label">{{ choice }}</span>
 </label>
 {% endfor %}
