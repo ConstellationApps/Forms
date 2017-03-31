@@ -75,7 +75,7 @@ class Form(models.Model):
 
     class Meta:
         unique_together = (("form_id", "version"),)
-        ordering = ("-version",)
+        ordering = ("-form_id", "-version",)
         db_table = 'form'
 
     def __str__(self):

@@ -26,6 +26,18 @@
                 {% endfor %}
             </div>
         </div>
+        <div class="mdl-card__menu form_menu">
+            <a href="{% url 'view_approve_submission' id %}">
+                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored form_menu_approve">
+                    <i class="material-icons">check</i>
+                </button>
+            </a>
+            <a href="{% url 'view_deny_submission' id %}">
+                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored form_menu_deny">
+                    <i class="material-icons">block</i>
+                </button>
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}

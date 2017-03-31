@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Group
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.views import View
 from django.urls import reverse
@@ -127,6 +128,8 @@ class view_form_submission(View):
             'template_settings': template_settings,
             'name': submission.form.name,
             'description': submission.form.description,
+            'state': submission.state,
+            'id': form_submission_id,
             'widgets': submission_data,
         })
 
@@ -153,6 +156,7 @@ def list_submissions(request):
         submissions = [{
             "name": f.form.name,
             "description": f.modified,
+            "state": f.state,
             "pk": f.pk
         } for f in submissions]
 
@@ -162,3 +166,17 @@ def list_submissions(request):
             'list_items': submissions,
             'url': reverse('view_form_submission', args=[0])[:-2],
         })
+
+
+def approve_submission(request, form_submission_id):
+        submission = FormSubmission.objects.get(pk=form_submission_id)
+        submission.state = 2
+        submission.save()
+        return HttpResponseRedirect(reverse('view_list_submissions'))
+
+
+def deny_submission(request, form_submission_id):
+        submission = FormSubmission.objects.get(pk=form_submission_id)
+        submission.state = 3
+        submission.save()
+        return HttpResponseRedirect(reverse('view_list_submissions'))

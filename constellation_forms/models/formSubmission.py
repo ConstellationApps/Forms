@@ -37,6 +37,7 @@ class FormSubmission(models.Model):
 
     class Meta:
         db_table = 'form_submission'
+        ordering = ("-modified",)
 
     def __str__(self):
         return "{0}: {1} {2} {3}".format(self.form, self.modified, self.owner,

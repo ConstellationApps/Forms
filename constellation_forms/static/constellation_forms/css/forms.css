@@ -16,6 +16,26 @@
     margin-bottom: 10px;
 }
 
+.form_menu {
+    margin-top: 130px;
+}
+
+.form_menu > a {
+    text-decoration: none;
+}
+
+.form_menu_approve {
+    background: #61b961 !important;
+}
+
+.form_menu_deny {
+    background: #c95c5c !important;
+}
+
+.state-icon {
+    padding-right: 15px;
+}
+
 .huge-textfield .mdl-textfield__input {
     font-size: 40px;
 }
@@ -134,6 +154,9 @@ select:-moz-focusring {
 
 .form-title {
     display: block;
+    background: #b3d4fc;
+    width: 100%;
+    height: 175px;
 }
 
 .submission-text {
@@ -154,6 +177,10 @@ select:-moz-focusring {
 /* Allow dropdown menus to appear outside of card */
 .mdl-card__supporting-text {
     overflow: visible;
+}
+
+.mdl-card {
+    padding: 0px;
 }
 
 /* Stars */

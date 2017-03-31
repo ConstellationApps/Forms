@@ -2,6 +2,12 @@
 
 {% block title %}Forms | List {{ list_type }}{% endblock %}
 
+{% block head %}
+{{ block.super }}
+{% load static %}
+<link rel="stylesheet" href="{% static 'constellation_forms/css/forms.css' %}">
+{% endblock %}
+
 {% block content %}
 <div id="formsCard" class="mdl-card mdl-cell--8-col mdl-cell--2-offset-desktop mdl-shadow--2dp mdl-grid">
   <div class="mdl-card__title">
@@ -21,6 +27,17 @@
       {% for item in list_items %}
       <div class="mdl-list__item">
         <span class="mdl-list__item-primary-content">
+          {% if list_type == 'Form Submissions' %}
+          {% if item.state == 0 %}
+          <i class="material-icons state-icon">drafts</i>
+          {% elif item.state == 1 %}
+          <i class="material-icons state-icon">inbox</i>
+          {% elif item.state == 2 %}
+          <i class="material-icons state-icon">thumb_up</i>
+          {% elif item.state == 3 %}
+          <i class="material-icons state-icon">thumb_down</i>
+          {% endif %}
+          {% endif %}
           <a href="{{ url }}/{{ item.pk }}">{{ item.name }}</a>
         </span>
         <span class="mdl-list__item-secondary-content">
