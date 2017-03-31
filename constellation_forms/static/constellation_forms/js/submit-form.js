@@ -48,7 +48,8 @@ function validate(elem) {
  */
 function getWidgetValue(widget) {
   let inputs = widget.find('input');
-  if(inputs.length == 1) {
+  console.log(widget);
+  if(inputs.length == 1 || (inputs.length == 0 && widget.find('textarea').length > 0)) {
     return widget.serializeArray()[0]['value'];
   } else {
     let returnArray = [];
@@ -93,6 +94,6 @@ function submitForm() {
     'data': JSON.stringify(widgetForm),
   };
   $.post($(location).attr('href'), data, function(response) {
-    //    window.location.href = '/forms/view/list-submissions';
+       window.location.href = '/forms/view/list-submissions';
   });
 }
