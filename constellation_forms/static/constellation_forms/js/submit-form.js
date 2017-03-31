@@ -1,9 +1,13 @@
 /* exported submitForm */
 
-$.webshims.polyfill();
-
 $(function() {
   setupValidation();
+  $('input[type="date"]').datepicker({
+    onSelect: function() {
+      $(this)[0].parentElement.MaterialTextfield.checkValidity();
+      $(this)[0].parentElement.MaterialTextfield.checkDirty();
+    },
+  });
 });
 
 /**

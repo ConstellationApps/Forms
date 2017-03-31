@@ -155,3 +155,36 @@ select:-moz-focusring {
 .mdl-card__supporting-text {
     overflow: visible;
 }
+
+/* Stars */
+.stars {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+}
+
+.star-holder .mdl-radio__outer-circle {
+    border: none!important;
+}
+
+.star-holder .mdl-radio__inner-circle {
+    display: none!important;
+}
+
+.star-holder .mdl-radio__outer-circle::before {
+    content: "\2606";
+    font-size: 26px;
+    line-height:16px;
+}
+
+.star-holder:not(.is-checked):hover .mdl-radio__outer-circle::before,
+.star-holder:hover ~ .star-holder:not(.is-checked) .mdl-radio__outer-circle::before {
+    content: "\2605";
+    color: rgb(68,138,255);
+}
+
+.star-holder.is-checked .mdl-radio__outer-circle::before,
+.star-holder.is-checked ~ .star-holder:not(.is-checked) .mdl-radio__outer-circle::before,
+.star-holder.is-checked ~ .star-holder.is-checked .mdl-radio__outer-circle::before {
+    content: "\2605";
+    color: rgb(63,81,255);
+}

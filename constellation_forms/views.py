@@ -44,6 +44,8 @@ class manage_create_form(View):
                 temp_widget['required'] = False
             if 'validator' in widget:
                 temp_widget['validator'] = widget['validator']
+            if 'steps' in widget:
+                temp_widget['steps'] = widget['steps']
             choices = [(int(k.split('-')[1]), v) for k, v in widget.items()
                        if 'choice' in k]
             if len(choices) > 0:
