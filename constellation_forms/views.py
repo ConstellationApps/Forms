@@ -116,7 +116,7 @@ class view_form_submission(View):
         submission_data = []
         for index, value in enumerate(submission.submission):
             element = {}
-            for tag in ('title', 'description', 'type'):
+            for tag in ('title', 'description', 'type', 'steps'):
                 if tag not in submission.form.elements[index]:
                     continue
                 element[tag] = submission.form.elements[index][tag]

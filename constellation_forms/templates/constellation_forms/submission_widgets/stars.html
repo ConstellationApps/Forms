@@ -1,3 +1,18 @@
 <h4>{{ widget.title }}</h4>
 {{ widget.description }}<br/>
-<div class="submission-text">{{ widget.value }}</div>
+<div class="submission-text">
+    {% with widget.value|first as number %}
+    {% with ''|center:number as range %}
+    {% for _ in range %}
+    &#9733;
+    {% endfor %}
+    {% endwith %}
+    {% with "-"|add:number|add:widget.steps as remainder %}
+    {% with ''|center:remainder as range %}
+    {% for _ in range %}
+    &#9734;
+    {% endfor %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+</div>
