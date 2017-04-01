@@ -2,7 +2,7 @@
 
 $(function() {
   setupValidation();
-  $('input[type="date"]').datepicker({
+  $('.datefield').datepicker({
     onSelect: function() {
       $(this)[0].parentElement.MaterialTextfield.checkValidity();
       $(this)[0].parentElement.MaterialTextfield.checkDirty();
