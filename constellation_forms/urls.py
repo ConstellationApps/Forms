@@ -8,6 +8,10 @@ urlpatterns = [
     url(r'^manage/create-form$', views.manage_create_form.as_view(),
         name="manage_create_form"),
 
+    url(r'^manage/create-form/(?P<form_id>\d+)$',
+        views.manage_create_form.as_view(),
+        name="manage_create_form"),
+
     # View Functions
     url(r'^view/list-forms$', views.list_forms,
         name="view_list_forms"),

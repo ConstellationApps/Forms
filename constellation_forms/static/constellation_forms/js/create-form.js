@@ -1,6 +1,5 @@
-/* global Handlebars componentHandler widgetPath Sortable */
+/* global Handlebars componentHandler widgetPath Sortable formData */
 /* exported addWidget deleteWidget addChoice deleteChoice submitForm */
-
 
 /*
  * Enable dragging items around
@@ -33,11 +32,13 @@ function activateFormPart(part) {
  * Create a new widget from the handlebars template and add it to the
  * form list
  * @param {string} widgetName - Name of the widget to create
+ * @param {Object} widgetContents - Contents of the widget to create
  */
-function addWidget(widgetName) {
+function addWidget(widgetName, widgetContents) {
   addWidget.count = ++addWidget.count || 1;       // Like a static var
   let template = $.handlebarTemplates[widgetName]({
     'id': addWidget.count,
+    'contents': widgetContents,
   });
   let widget = $(template).appendTo($('#widgets-holder'));
   widget.click(function() {
@@ -139,8 +140,8 @@ function submitForm() {
 }
 
 let templateList = [
-  widgetPath + 'textfield.hbs',
-  widgetPath + 'datefield.hbs',
+  widgetPath + 'text.hbs',
+  widgetPath + 'date.hbs',
   widgetPath + 'multifield.hbs',
   widgetPath + 'paragraph.hbs',
   widgetPath + 'boolean.hbs',
@@ -156,4 +157,45 @@ let partialList = [
 $(document).autoBars({
   main_template_from_list: templateList,
   partial_template_from_list: partialList,
+  callback: setupForm,
 });
+
+/** Uses the form data to open the form for editing */
+function setupForm() {
+  Handlebars.registerHelper('if_eq', function(a, b, options) {
+    if (a == b) {
+      return options.fn(this);
+    } else {
+      return options.inverse(this);
+    }
+  });
+  if (formData != '') {
+    $('#form-name').val(formData.fields.name);
+    $('#form-name')[0].parentElement.MaterialTextfield.checkValidity();
+    $('#form-name')[0].parentElement.MaterialTextfield.checkDirty();
+    $('#form-description').val(formData.fields.description);
+    $('#form-description')[0].parentElement.MaterialTextfield.checkValidity();
+    $('#form-description')[0].parentElement.MaterialTextfield.checkDirty();
+    for (const widget of formData.fields.elements) {
+      let type = widget.type;
+      switch(widget.type) {
+        case 'checkbox':
+          type = 'multifield';
+          break;
+        case 'dropdown':
+          type = 'multifield';
+          break;
+        case 'radio':
+          type = 'multifield';
+          break;
+        case 'slider':
+          type = 'scale';
+          break;
+        case 'stars':
+          type = 'scale';
+          break;
+      }
+      addWidget(type, widget);
+    }
+  }
+}

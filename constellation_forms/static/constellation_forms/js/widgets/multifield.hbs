@@ -2,28 +2,44 @@
     <div class="mdl-cell mdl-cell--12-col drag-handle-holder drag-handle"><i class="material-icons drag-handle">drag_handle</i></div>
     <div class="mdl-cell--8-col widget-type mdl-cell--order-2-desktop mdl-cell--4-col-desktop">
         <select class="multi-selector" name="type">
-            <option value="checkbox">Checkboxes</option>
-            <option value="radio">Radio</option>
-            <option value="dropdown">Dropdown</option>
+            <option value="checkbox"{{#if_eq contents.type "checkbox"}} selected{{/if_eq}}>Checkboxes</option>
+            <option value="radio"{{#if_eq contents.type "radio"}} selected{{/if_eq}}>Radio</option>
+            <option value="dropdown"{{#if_eq contents.type "dropdown"}} selected{{/if_eq}}>Dropdown</option>
         </select>
     </div>
-    {{> widgetMeta name="Multi Field" type="multifield" }}
+    {{> widgetMeta name="Multi Field" type="multifield" element=contents }}
     <ul id="choices-list-{{ id }}" class="mdl-list mdl-cell--12-col choices-list mdl-cell--order-3">
-        <li class="mdl-list__item">
-            <span class="mdl-list__item-primary-content">
-                <i class="material-icons">check_box</i>
-                <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--4-col">
-                    <input class="mdl-textfield__input" type="text" name="choice-1" id="multifield-choice-{{ id }}-1">
-                    <label class="mdl-textfield__label" for="multifield-choice-{{ id }}-1">Choice</label>
-                </div>
-                <button class="mdl-button mdl-js-button mdl-button--icon delete-choice" onclick="deleteChoice(this)" disabled>
-                    <i class="material-icons">clear</i>
-                </button>
-            </span>
-        </li>
+        {{#unless contents.choices}}
+            <li class="mdl-list__item">
+                <span class="mdl-list__item-primary-content">
+                    <i class="material-icons">check_box</i>
+                    <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--4-col">
+                        <input class="mdl-textfield__input" type="text" name="choice-1" id="multifield-choice-{{ id }}-1">
+                        <label class="mdl-textfield__label" for="multifield-choice-{{ id }}-1">Choice</label>
+                    </div>
+                    <button class="mdl-button mdl-js-button mdl-button--icon delete-choice" onclick="deleteChoice(this)" disabled>
+                        <i class="material-icons">clear</i>
+                    </button>
+                </span>
+            </li>
+        {{/unless}}
+        {{#each contents.choices}}
+            <li class="mdl-list__item">
+                <span class="mdl-list__item-primary-content">
+                    <i class="material-icons">check_box</i>
+                    <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--4-col">
+                        <input class="mdl-textfield__input" type="text" name="choice-{{@index}}" id="multifield-choice-{{ id }}-{{@index}}" value="{{this}}">
+                        <label class="mdl-textfield__label" for="multifield-choice-{{ id }}-{{@index}}">Choice</label>
+                    </div>
+                    <button class="mdl-button mdl-js-button mdl-button--icon delete-choice" onclick="deleteChoice(this)" disabled>
+                        <i class="material-icons">clear</i>
+                    </button>
+                </span>
+            </li>
+        {{/each}}
     </ul>
     <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-cell--order-3" onclick="addChoice({{ id }})">
         <i class="material-icons ">add_circle</i> Add
     </button>
-    {{> widgetExtra }}
+    {{> widgetExtra element=contents }}
 </form>

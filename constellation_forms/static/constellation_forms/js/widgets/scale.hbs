@@ -1,15 +1,15 @@
 <form action="#" class="form-part mdl-grid" id="form-part-{{ id }}">
     <div class="mdl-cell mdl-cell--12-col drag-handle-holder drag-handle"><i class="material-icons drag-handle">drag_handle</i></div>
     <div class="mdl-cell--8-col widget-type mdl-cell--order-2-desktop mdl-cell--4-col-desktop">
-        <select class="multi-selector" name="type">
+        <select class="multi-selector" name="type" value="{{ contents.type }}">
             <option value="stars">Stars</option>
             <option value="slider">Slider</option>
         </select>
     </div>
-    {{> widgetMeta name="Scale" type="scale" }}
+    {{> widgetMeta name="Scale" type="scale" element=contents}}
     <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col mdl-cell--order-3">
-        <input class="mdl-textfield__input" type="number" name="steps" id="scale-size-{{ id }}" required>
+        <input class="mdl-textfield__input" type="number" name="steps" id="scale-size-{{ id }}" value="{{ contents.steps }}" required>
         <label class="mdl-textfield__label" for="scale-size-{{ id }}">Steps</label>
     </div>
-    {{> widgetExtra }}
+    {{> widgetExtra element=contents }}
 </form>

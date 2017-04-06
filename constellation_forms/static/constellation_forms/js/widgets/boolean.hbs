@@ -1,6 +1,6 @@
 <form action="#" class="form-part mdl-grid" id="form-part-{{ id }}">
     <input type="hidden" name="type" value="boolean">
     {{> widgetHeader name="Yes/No Field" }}
-    {{> widgetMeta name="Yes/No Field" type="booleanfield" }}
-    {{> widgetExtra }}
+    {{> widgetMeta name="Yes/No Field" type="booleanfield" element=contents}}
+    {{> widgetExtra element=contents }}
 </form>

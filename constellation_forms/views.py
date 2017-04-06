@@ -1,4 +1,5 @@
 from django.contrib.auth.models import Group
+from django.core import serializers
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -15,13 +16,22 @@ import json
 
 
 class manage_create_form(View):
-    def get(self, request):
+    def get(self, request, form_id=None):
         ''' Returns a page that allows for the creation of new forms '''
         template_settings = GlobalTemplateSettings(allowBackground=False)
         template_settings = template_settings.settings_dict()
         groups = [(g.name, g.pk) for g in Group.objects.all()]
 
+        form = None
+
+        if form_id is not None:
+            form = serializers.serialize(
+                "json",
+                Form.objects.filter(form_id=form_id)
+            )
+
         return render(request, 'constellation_forms/create-form.html', {
+            'form': form,
             'groups': groups,
             'template_settings': template_settings,
         })

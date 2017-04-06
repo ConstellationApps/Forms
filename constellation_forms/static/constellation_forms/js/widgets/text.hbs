@@ -1,6 +1,6 @@
 <form action="#" class="form-part mdl-grid" id="form-part-{{ id }}">
     <input type="hidden" name="type" value="text">
     {{> widgetHeader name="Text Field" }}
-    {{> widgetMeta name="Text Field" type="textfield" }}
-    {{> widgetExtra }}
+    {{> widgetMeta name="Text Field" type="textfield" element=contents }}
+    {{> widgetExtra element=contents }}
 </form>
