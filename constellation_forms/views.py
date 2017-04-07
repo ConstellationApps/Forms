@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 from constellation_base.models import GlobalTemplateSettings
 from .models import (
@@ -12,6 +13,7 @@ from .models import (
     FormSubmission
 )
 
+import csv
 import json
 
 
@@ -145,48 +147,73 @@ class view_form_submission(View):
 
 
 def list_forms(request):
-        ''' Returns a page that includes a list of available forms '''
-        template_settings = GlobalTemplateSettings(allowBackground=False)
-        template_settings = template_settings.settings_dict()
-        forms = Form.objects.all()
+    ''' Returns a page that includes a list of available forms '''
+    template_settings = GlobalTemplateSettings(allowBackground=False)
+    template_settings = template_settings.settings_dict()
+    forms = Form.objects.all()
 
-        return render(request, 'constellation_forms/list.html', {
-            'template_settings': template_settings,
-            'list_type': 'Forms',
-            'list_items': forms,
-            'url': reverse('view_form', args=[0])[:-2],
-        })
+    return render(request, 'constellation_forms/list.html', {
+        'template_settings': template_settings,
+        'list_type': 'Forms',
+        'list_items': forms,
+        'url': reverse('view_form', args=[0])[:-2],
+    })
 
 
 def list_submissions(request):
-        ''' Returns a page that includes a list of submitted forms '''
-        template_settings = GlobalTemplateSettings(allowBackground=False)
-        template_settings = template_settings.settings_dict()
-        submissions = FormSubmission.objects.all()
-        submissions = [{
-            "name": f.form.name,
-            "description": f.modified,
-            "state": f.state,
-            "pk": f.pk
-        } for f in submissions]
+    ''' Returns a page that includes a list of submitted forms '''
+    template_settings = GlobalTemplateSettings(allowBackground=False)
+    template_settings = template_settings.settings_dict()
+    submissions = FormSubmission.objects.all()
+    submissions = [{
+        "name": f.form.name,
+        "description": f.modified,
+        "state": f.state,
+        "pk": f.pk
+    } for f in submissions]
 
-        return render(request, 'constellation_forms/list.html', {
-            'template_settings': template_settings,
-            'list_type': 'Form Submissions',
-            'list_items': submissions,
-            'url': reverse('view_form_submission', args=[0])[:-2],
-        })
+    return render(request, 'constellation_forms/list.html', {
+        'template_settings': template_settings,
+        'list_type': 'Form Submissions',
+        'list_items': submissions,
+        'url': reverse('view_form_submission', args=[0])[:-2],
+    })
 
 
 def approve_submission(request, form_submission_id):
-        submission = FormSubmission.objects.get(pk=form_submission_id)
-        submission.state = 2
-        submission.save()
-        return HttpResponseRedirect(reverse('view_list_submissions'))
+    submission = FormSubmission.objects.get(pk=form_submission_id)
+    submission.state = 2
+    submission.save()
+    return HttpResponseRedirect(reverse('view_list_submissions'))
 
 
 def deny_submission(request, form_submission_id):
-        submission = FormSubmission.objects.get(pk=form_submission_id)
-        submission.state = 3
-        submission.save()
-        return HttpResponseRedirect(reverse('view_list_submissions'))
+    submission = FormSubmission.objects.get(pk=form_submission_id)
+    submission.state = 3
+    submission.save()
+    return HttpResponseRedirect(reverse('view_list_submissions'))
+
+
+@csrf_exempt
+def api_export(request, form_id):
+    ''' Returns a serialized set of submissions for the form '''
+    params = request.GET["query"]
+    forms = Form.objects.filter(form_id=form_id)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    writer = csv.writer(response)
+    writer.writerow(params)
+    for form in forms:
+        slug_indexes = [-1] * len(params)
+        for index, element in enumerate(form.elements):
+            if element in params:
+                slug_indexes[params.index(element)] = index
+        for submission in FormSubmission.objects.filter(form=form):
+            line = []
+            for index in slug_indexes:
+                if index == -1:
+                    line.append("")
+                else:
+                    line.append(submission.submission[index]['value'])
+            writer.writerow(line)
+    return response
