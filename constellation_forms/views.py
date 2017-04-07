@@ -108,7 +108,7 @@ class view_form(View):
 
     def post(self, request, form_id):
         ''' Creates a form '''
-        form = Form.objects.get(form_id=form_id)
+        form = Form.objects.filter(form_id=form_id).first()
         form_data = json.loads(request.POST['data'])['widgets']
         user = request.user
         state = 1  # submitted
@@ -149,6 +149,8 @@ class view_form_submission(View):
             'state': submission.state,
             'id': form_submission_id,
             'widgets': submission_data,
+            'form_id': submission.form.form_id,
+            'version': submission.form.version,
         })
 
 
@@ -179,14 +181,14 @@ def list_submissions(request):
         "name": f.form.name,
         "description": f.modified,
         "state": f.state,
-        "pk": f.pk
+        "pk": f.pk,
+        "url": reverse('view_form_submission', args=[f.pk]),
     } for f in submissions]
 
     return render(request, 'constellation_forms/list.html', {
         'template_settings': template_settings,
         'list_type': 'Form Submissions',
         'list_items': submissions,
-        'url': reverse('view_form_submission', args=[0])[:-2],
     })
 
 
