@@ -154,10 +154,13 @@ let partialList = [
   widgetPath + 'commonpartials.hbs',
 ];
 
-$(document).autoBars({
-  main_template_from_list: templateList,
-  partial_template_from_list: partialList,
-  callback: setupForm,
+$(function() {
+  componentHandler.upgradeDom();
+  $(document).autoBars({
+    main_template_from_list: templateList,
+    partial_template_from_list: partialList,
+    callback: setupForm,
+  });
 });
 
 /** Uses the form data to open the form for editing */
