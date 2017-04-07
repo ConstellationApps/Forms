@@ -213,24 +213,29 @@ def api_export(request, form_id):
     if "query" in request.GET:
         params = request.GET["query"]
     else:
-        params = [f.slug for f in forms.first().elements]
+        first_form_elements = forms.first().elements
+        if "slug" in first_form_elements[0]:
+            params = [f['slug'] for f in first_form_elements]
+        else:
+            params = [f['title'] for f in first_form_elements]
 
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    response = HttpResponse(content_type='text')
 
     writer = csv.writer(response)
     writer.writerow(params)
     for form in forms:
         slug_indexes = [-1] * len(params)
         for index, element in enumerate(form.elements):
-            if element in params:
-                slug_indexes[params.index(element)] = index
+            if "slug" in element and element['slug'] in params:
+                slug_indexes[params.index(element['slug'])] = index
+            elif "title" in element and element['title'] in params:
+                slug_indexes[params.index(element['title'])] = index
         for submission in FormSubmission.objects.filter(form=form):
             line = []
             for index in slug_indexes:
                 if index == -1:
                     line.append("")
                 else:
-                    line.append(submission.submission[index]['value'])
+                    line.append(submission.submission[index])
             writer.writerow(line)
     return response
