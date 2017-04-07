@@ -38,7 +38,7 @@ class manage_create_form(View):
             'template_settings': template_settings,
         })
 
-    def post(self, request):
+    def post(self, request, form_id=None):
         ''' Creates a form '''
         form_data = json.loads(request.POST['data'])
         title = form_data['meta']['title']
@@ -71,13 +71,19 @@ class manage_create_form(View):
             widgets.append(temp_widget)
 
         # This is not safe, but it will work for now...
-        if Form.objects.all().count() > 0:
-            form_id = Form.objects.all().order_by("-form_id")[0].form_id + 1
+        if not form_id:
+            if Form.objects.all().count() > 0:
+                last_form = Form.objects.all().order_by("-form_id").first()
+                form_id = last_form.form_id + 1
+            else:
+                form_id = 1
+            version = 1
         else:
-            form_id = 1
+            current_form = Form.objects.filter(form_id=form_id).first()
+            version = current_form.version + 1
 
         new_form = Form(
-            version=1,
+            version=version,
             form_id=form_id,
             name=title,
             description=description,
@@ -197,10 +203,15 @@ def deny_submission(request, form_submission_id):
 @csrf_exempt
 def api_export(request, form_id):
     ''' Returns a serialized set of submissions for the form '''
-    params = request.GET["query"]
     forms = Form.objects.filter(form_id=form_id)
+    if "query" in request.GET:
+        params = request.GET["query"]
+    else:
+        params = [f.slug for f in forms.first().elements]
+
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+
     writer = csv.writer(response)
     writer.writerow(params)
     for form in forms:

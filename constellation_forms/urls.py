@@ -29,7 +29,12 @@ urlpatterns = [
     url(r'^view/submission/(?P<form_submission_id>\d+)/approve$',
         views.approve_submission,
         name="view_approve_submission"),
+
     url(r'^view/submission/(?P<form_submission_id>\d+)/deny$',
         views.deny_submission,
         name="view_deny_submission"),
+
+    url(r'^api/export/(?P<form_id>\d+)$',
+        views.api_export,
+        name="api_export"),
 ]
