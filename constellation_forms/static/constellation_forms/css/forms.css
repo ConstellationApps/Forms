@@ -220,3 +220,11 @@ select:-moz-focusring {
 .mdl-list__item .mdl-list__item-secondary-content {
     display: inline-block;
 }
+
+.form_version {
+    color: #888888;
+    display: inline-block;
+    font-size: small;
+    line-height: 36px;
+    margin:10px;
+}
