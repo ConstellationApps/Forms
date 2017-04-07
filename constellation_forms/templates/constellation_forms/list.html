@@ -38,10 +38,13 @@
           <i class="material-icons state-icon">thumb_down</i>
           {% endif %}
           {% endif %}
-          <a href="{{ url }}/{{ item.pk }}">{{ item.name }}</a>
+          <a href="{{ item.url }}">{{ item.name }}</a>
         </span>
         <span class="mdl-list__item-secondary-content">
           {{ item.description }}
+          {% if item.edit %}
+          <a href="{{ item.edit }}"><i class="material-icons">edit</i></a>
+          {% endif %}
         </span>
       </div>
       {% endfor %}

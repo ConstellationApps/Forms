@@ -216,3 +216,7 @@ select:-moz-focusring {
     content: "\2605";
     color: rgb(63,81,255);
 }
+
+.mdl-list__item .mdl-list__item-secondary-content {
+    display: inline-block;
+}

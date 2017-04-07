@@ -156,13 +156,17 @@ def list_forms(request):
     ''' Returns a page that includes a list of available forms '''
     template_settings = GlobalTemplateSettings(allowBackground=False)
     template_settings = template_settings.settings_dict()
-    forms = Form.objects.all()
+    forms_query = Form.objects.distinct('form_id')
+    forms = []
+    for form in forms_query:
+        form.url = reverse('view_form', args=[form.form_id])
+        form.edit = reverse('manage_create_form', args=[form.form_id])
+        forms.append(form)
 
     return render(request, 'constellation_forms/list.html', {
         'template_settings': template_settings,
         'list_type': 'Forms',
         'list_items': forms,
-        'url': reverse('view_form', args=[0])[:-2],
     })
 
 
