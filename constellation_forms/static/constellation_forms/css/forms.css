@@ -1,5 +1,6 @@
 .small-card {
     margin-bottom: 10px;
+    position: static;
     width: 100%;
 }
 
@@ -176,7 +177,7 @@ select:-moz-focusring {
 }
 
 /* Allow dropdown menus to appear outside of card */
-.mdl-card__supporting-text {
+.mdl-card, .mdl-card__supporting-text {
     overflow: visible;
 }
 

@@ -49,6 +49,7 @@ Why JSONB and not the traditional relational model:
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
+from guardian.shortcuts import get_groups_with_perms
 import re
 
 
@@ -73,10 +74,34 @@ class Form(models.Model):
     description = models.TextField(blank=True)
     elements = JSONField()
 
+    @property
+    def visible_by(self):
+        """ Returns the group that has the form_visible permission """
+        visible_by = get_groups_with_perms(self, attach_perms=True)
+        if visible_by:
+            return list(filter(lambda x: 'form_visible' in visible_by[x],
+                               visible_by.keys()))[0]
+        else:
+            return ""
+
+    @property
+    def owned_by(self):
+        """ Returns the group that has the form_owner permission """
+        owned_by = get_groups_with_perms(self, attach_perms=True)
+        if owned_by:
+            return list(filter(lambda x: 'form_owner' in owned_by[x],
+                               owned_by.keys()))[0]
+        else:
+            return ""
+
     class Meta:
         unique_together = (("form_id", "version"),)
         ordering = ("-form_id", "-version",)
         db_table = 'form'
+        permissions = (
+            ("form_owned_by", "Form Owner"),
+            ("form_visible", "Form is Visible")
+        )
 
     def __str__(self):
         return "{0}.{1} - {2}".format(self.form_id, self.version, self.name)

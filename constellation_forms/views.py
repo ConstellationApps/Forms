@@ -1,13 +1,22 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.core import serializers
+from django.db import transaction
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
+
+from guardian.decorators import (
+    permission_required,
+    permission_required_or_403,
+)
+from guardian.shortcuts import assign_perm
+
 from constellation_base.models import GlobalTemplateSettings
 from .models import (
     Form,
@@ -20,6 +29,9 @@ import json
 
 
 class manage_create_form(View):
+    @method_decorator(login_required)
+    @method_decorator(
+        permission_required('constellation_orderboard.add_board'))
     def get(self, request, form_id=None):
         ''' Returns a page that allows for the creation of new forms '''
         template_settings = GlobalTemplateSettings(allowBackground=False)
@@ -36,63 +48,75 @@ class manage_create_form(View):
 
         return render(request, 'constellation_forms/create-form.html', {
             'form': form,
-            'groups': groups,
+            'visible_groups': groups,
             'template_settings': template_settings,
         })
 
+    @method_decorator(login_required)
+    @method_decorator(
+        permission_required('constellation_orderboard.add_board'))
     def post(self, request, form_id=None):
         ''' Creates a form '''
         form_data = json.loads(request.POST['data'])
         title = form_data['meta']['title']
         description = form_data['meta']['description']
         widgets = []
-        for widget in form_data['widgets']:
-            temp_widget = {}
-            temp_widget['type'] = widget['type']
-            if 'title' in widget:
-                temp_widget['title'] = widget['title']
-            if 'description' in widget:
-                temp_widget['description'] = widget['description']
-            if 'required' in widget and widget['required'] == 'on':
-                temp_widget['required'] = True
-            else:
-                temp_widget['required'] = False
-            if 'validator' in widget:
-                temp_widget['validator'] = widget['validator']
-            if 'steps' in widget:
-                temp_widget['steps'] = widget['steps']
-            choices = [(int(k.split('-')[1]), v) for k, v in widget.items()
-                       if 'choice' in k]
-            if len(choices) > 0:
-                if 'other-allowed' in widget and 'other-allowed' == 'on':
-                    temp_widget['other_allowed'] = True
+        with transaction.atomic():
+            for widget in form_data['widgets']:
+                temp_widget = {}
+                temp_widget['type'] = widget['type']
+                if 'title' in widget:
+                    temp_widget['title'] = widget['title']
+                if 'description' in widget:
+                    temp_widget['description'] = widget['description']
+                if 'required' in widget and widget['required'] == 'on':
+                    temp_widget['required'] = True
                 else:
-                    temp_widget['other_allowed'] = False
-                choices.sort()
-                temp_widget['choices'] = [v[1] for v in choices]
-            widgets.append(temp_widget)
+                    temp_widget['required'] = False
+                if 'validator' in widget:
+                    temp_widget['validator'] = widget['validator']
+                if 'steps' in widget:
+                    temp_widget['steps'] = widget['steps']
+                choices = [(int(k.split('-')[1]), v) for k, v in widget.items()
+                           if 'choice' in k]
+                if len(choices) > 0:
+                    if 'other-allowed' in widget and 'other-allowed' == 'on':
+                        temp_widget['other_allowed'] = True
+                    else:
+                        temp_widget['other_allowed'] = False
+                    choices.sort()
+                    temp_widget['choices'] = [v[1] for v in choices]
+                widgets.append(temp_widget)
 
-        # This is not safe, but it will work for now...
-        if not form_id:
-            if Form.objects.all().count() > 0:
-                last_form = Form.objects.all().order_by("-form_id").first()
-                form_id = last_form.form_id + 1
+            # This is not safe, but it will work for now...
+            if not form_id:
+                if Form.objects.all().count() > 0:
+                    last_form = Form.objects.all().order_by("-form_id").first()
+                    form_id = last_form.form_id + 1
+                else:
+                    form_id = 1
+                version = 1
             else:
-                form_id = 1
-            version = 1
-        else:
-            current_form = Form.objects.filter(form_id=form_id).first()
-            version = current_form.version + 1
+                current_form = Form.objects.filter(form_id=form_id).first()
+                version = current_form.version + 1
 
-        new_form = Form(
-            version=version,
-            form_id=form_id,
-            name=title,
-            description=description,
-            elements=widgets,
-        )
-        new_form.full_clean()
-        new_form.save()
+            new_form = Form(
+                version=version,
+                form_id=form_id,
+                name=title,
+                description=description,
+                elements=widgets,
+            )
+            new_form.full_clean()
+            new_form.save()
+
+            # Add permissions
+            visible_group = Group.objects.get(
+                name=form_data['options']['visible'])
+            assign_perm("form_visible", visible_group, new_form)
+            owner_group = Group.objects.get(name=form_data['options']['owner'])
+            assign_perm("form_owner", owner_group, new_form)
+
         return HttpResponse(reverse('view_list_forms'))
 
 
