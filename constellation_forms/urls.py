@@ -37,4 +37,7 @@ urlpatterns = [
     url(r'^api/export/(?P<form_id>\d+)$',
         views.api_export,
         name="api_export"),
+
+    url(r'^view/dashboard$', views.view_dashboard,
+        name="view_dashboard"),
 ]

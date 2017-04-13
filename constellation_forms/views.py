@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.core import serializers
 from django.shortcuts import render
@@ -239,3 +240,14 @@ def api_export(request, form_id):
                     line.append(submission.submission[index])
             writer.writerow(line)
     return response
+
+# -----------------------------------------------------------------------------
+# Dashboard
+# -----------------------------------------------------------------------------
+
+
+@login_required
+def view_dashboard(request):
+    '''Return a card that will appear on the main dashboard'''
+
+    return render(request, 'constellation_forms/dashboard.html')
