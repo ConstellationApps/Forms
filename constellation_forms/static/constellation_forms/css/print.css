@@ -10,10 +10,16 @@ input[type=text] {
     line-height: 3em;
 }
 
-input[type=checkbox] {
-    appearance: none;
-    padding-left: 2.5em;
-    padding-right: 2.5em;
+input[type=checkbox], input[type=radio] {
+    display: none;
+}
+
+.print-checkbox {
+    border: 1px solid #000000;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 textarea {
@@ -48,6 +54,7 @@ textarea {
 }
 
 .form-widget {
+    display: block;
     margin-bottom: 1em;
     page-break-inside: avoid;
 }
@@ -69,6 +76,17 @@ textarea {
     padding: 0.5em;
 }
 
+.print-horizontal-choices {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.print-horizontal-item {
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+}
 
 
 /* Stars */

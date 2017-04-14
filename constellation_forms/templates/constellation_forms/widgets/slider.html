@@ -1,3 +1,10 @@
 <h4>{{ widget.title }}</h4>
 <span class="widget-description">{{ widget.description }}</span><br/>
-<input class="mdl-slider mdl-js-slider" name="value" type="range" min="0" max="{{ widget.steps }}" value="0" tabindex="0">
+<input class="mdl-slider mdl-js-slider screen-only" name="value" type="range" min="0" max="{{ widget.steps }}" value="0" tabindex="0">
+<div class="print-only print-horizontal-choices">
+    {% with ''|center:widget.steps as range %}
+    {% for _ in range %}
+    <span class="print-horizontal-item">{{ forloop.counter }}</span>
+    {% endfor %}
+    {% endwith %}
+</div>

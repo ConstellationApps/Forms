@@ -2,5 +2,6 @@
 <span class="widget-description">{{ widget.description }}</span><br/>
 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
     <textarea class="mdl-textfield__input" type="text" name="value" id="widget-{{ id }}"{% if widget.required %} required{% endif %}></textarea>
+    <span class="widget-description print-only">Please staple additional sheets if needed.</span>
     <label class="mdl-textfield__label screen-only" for="widget-{{ id }}">{{ widget.title }}</label>
 </div>

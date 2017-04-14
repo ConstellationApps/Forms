@@ -1,6 +1,7 @@
 <h4>{{ widget.title }}</h4>
 <span class="widget-description">{{ widget.description }}</span><br/>
-<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
+<span class="widget-description print-only">You may select only one item.</span>
+<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth screen-only">
     <input class="mdl-textfield__input" type="text" id="choice-{{ id }}" name="choice-{{ id }}" tabIndex="-1"{% if widget.required %} required{% endif %}>
     <label for="choice-{{ id }}">
         <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
@@ -11,4 +12,13 @@
         <li class="mdl-menu__item" data-val="choice">{{ choice }}</li>
         {% endfor %}
     </ul>
+</div>
+
+<div class="print-only print-horizontal-choices">
+    {% for choice in widget.choices %}
+    <div class="print-horizontal-item">
+        <div class="print-checkbox"></div>
+        <span>{{ choice }}</span>
+    </div>
+    {% endfor %}
 </div>
