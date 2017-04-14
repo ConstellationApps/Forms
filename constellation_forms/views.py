@@ -13,6 +13,7 @@ from .models import (
     Form,
     FormSubmission
 )
+from .util import api_key_required
 
 import csv
 import json
@@ -208,6 +209,7 @@ def deny_submission(request, form_submission_id):
 
 
 @csrf_exempt
+@api_key_required()
 def api_export(request, form_id):
     ''' Returns a serialized set of submissions for the form '''
     forms = Form.objects.filter(form_id=form_id)
