@@ -10,6 +10,7 @@ h1, h2, h3, h4, h5 {
 .form-title {
     text-align: center;
     border-bottom: 1px solid #000000;
+    margin-bottom: 1em;
 }
 
 .form-submit {
@@ -26,11 +27,22 @@ h1, h2, h3, h4, h5 {
     display: none;
 }
 
-.widget-start {
-
+.form-widget {
+    margin-bottom: 1em;
+    page-break-inside: avoid;
 }
 
-.widget-end {
-    display: inline-block;
-    margin-bottom: 1em;
+.form-description {
+    font-size: small;
+    padding: 1em;
+}
+
+.submission-text, .submission-checkbox {
+    padding: 1em;
+    margin: 0.25em;
+    border: 1px solid #000000;
+}
+
+.widget-description {
+    font-size: xx-small;
 }

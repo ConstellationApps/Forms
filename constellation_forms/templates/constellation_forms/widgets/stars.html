@@ -1,6 +1,5 @@
-<span class="widget-start"></span>
 <h4>{{ widget.title }}</h4>
-{{ widget.description }}<br/>
+<span class="widget-description">{{ widget.description }}</span><br/>
 <span class="stars">
     {% with ''|center:widget.steps as range %}
     {% for _ in range %}
@@ -11,4 +10,3 @@
     {% endfor %}
     {% endwith %}
 </span>
-<span class="widget-end"></span>

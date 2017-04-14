@@ -1,9 +1,9 @@
 <h4>{{ widget.title }}</h4>
-{{ widget.description }}<br/>
+<span class="widget-description">{{ widget.description }}</span><br/>
 <div class="submission-checkbox">
-<ul>
-    {% for choice in widget.value %}
-    <li>{{ choice }}</li>
-    {% endfor %}
-</ul>
+    <ul>
+        {% for choice in widget.value %}
+        <li>{{ choice }}</li>
+        {% endfor %}
+    </ul>
 </div>

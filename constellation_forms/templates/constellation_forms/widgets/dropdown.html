@@ -1,6 +1,5 @@
-<span class="widget-start"></span>
 <h4>{{ widget.title }}</h4>
-{{ widget.description }}<br/>
+<span class="widget-description">{{ widget.description }}</span><br/>
 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
     <input class="mdl-textfield__input" type="text" id="choice-{{ id }}" name="choice-{{ id }}" tabIndex="-1"{% if widget.required %} required{% endif %}>
     <label for="choice-{{ id }}">
@@ -13,4 +12,3 @@
         {% endfor %}
     </ul>
 </div>
-<span class="widget-end"></span>

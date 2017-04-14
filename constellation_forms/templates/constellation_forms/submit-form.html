@@ -28,7 +28,7 @@
         <div class="mdl-card__supporting-text">
             <div id="widgets-holder">
                 {% for widget in form.elements %}
-                <form id="form-{{ forloop.counter }}" name="form-{{ forloop.counter }}">
+                <form id="form-{{ forloop.counter }}" name="form-{{ forloop.counter }}" class="form-widget">
                     {% with "constellation_forms/widgets/"|add:widget.type|add:".html" as template %}
                     {% include template with widget=widget id=forloop.counter %}
                     {% endwith %}
