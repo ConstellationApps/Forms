@@ -1,15 +1,35 @@
-/* label { */
-/*     display: none; */
-/* } */
-
 h1, h2, h3, h4, h5 {
     margin: 0;
     padding: 0;
 }
 
+input[type=text] {
+    border: 0;
+    border-bottom: 1px solid #000000;
+    width: 100%;
+    line-height: 3em;
+}
+
+input[type=checkbox] {
+    appearance: none;
+    padding-left: 2.5em;
+    padding-right: 2.5em;
+}
+
+textarea {
+    width: 100%;
+    line-height: 10em;
+    resize: none;
+    border: 1px solid #000000;
+}
+
+.screen-only {
+    display: none;
+}
+
 .form-title {
     text-align: center;
-    border-bottom: 1px solid #000000;
+    border-bottom: 3px solid #000000;
     margin-bottom: 1em;
 }
 
@@ -45,4 +65,45 @@ h1, h2, h3, h4, h5 {
 
 .widget-description {
     font-size: xx-small;
+    margin: 0.5em;
+    padding: 0.5em;
+}
+
+
+
+/* Stars */
+.stars {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+}
+
+.stars input[type=radio] {
+    display: none;
+}
+
+.star-holder .mdl-radio__outer-circle {
+    border: none!important;
+}
+
+.star-holder .mdl-radio__inner-circle {
+    display: none!important;
+}
+
+.star-holder .mdl-radio__outer-circle::before {
+    content: "\2606";
+    font-size: 26px;
+    line-height:16px;
+}
+
+.star-holder:not(.is-checked):hover .mdl-radio__outer-circle::before,
+.star-holder:hover ~ .star-holder:not(.is-checked) .mdl-radio__outer-circle::before {
+    content: "\2605";
+    color: rgb(68,138,255);
+}
+
+.star-holder.is-checked .mdl-radio__outer-circle::before,
+.star-holder.is-checked ~ .star-holder:not(.is-checked) .mdl-radio__outer-circle::before,
+.star-holder.is-checked ~ .star-holder.is-checked .mdl-radio__outer-circle::before {
+    content: "\2605";
+    color: rgb(63,81,255);
 }

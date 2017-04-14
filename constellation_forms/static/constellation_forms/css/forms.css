@@ -229,3 +229,7 @@ select:-moz-focusring {
     line-height: 36px;
     margin:10px;
 }
+
+.printonly {
+    display: none;
+}
