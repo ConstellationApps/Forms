@@ -23,7 +23,7 @@ class FormSubmissionModelTest(TestCase):
 
         form2 = [
             {
-                "type": "choice",
+                "type": "radio",
                 "name": "pizza",
                 "description": "toppings",
                 "choices": ["cheese", "pepperoni"]
@@ -40,7 +40,7 @@ class FormSubmissionModelTest(TestCase):
         form.full_clean()
         form.save()
 
-        form2[0]["type"] = "multichoice"
+        form2[0]["type"] = "checkbox"
         form2[0]["other_choice"] = False
         form = Form(form_id=3, version=1, name="TestForm", description="",
                     elements=form2)
