@@ -23,7 +23,7 @@ from guardian.decorators import (
     permission_required_or_403,
 )
 
-from guardian.shortcuts import assign_perm, get_objects_for_user
+from guardian.shortcuts import assign_perm
 
 from constellation_base.models import GlobalTemplateSettings
 from .models import (
@@ -212,27 +212,26 @@ def list_forms(request):
     ''' Returns a page that includes a list of available forms '''
     template_settings = GlobalTemplateSettings(allowBackground=False)
     template_settings = template_settings.settings_dict()
-    owned_forms = get_objects_for_user(
-        request.user,
-        "constellation_forms.form_owned_by",
-        Form).distinct("form_id")
-    available_forms = get_objects_for_user(
-        request.user,
-        "constellation_forms.form_visible",
-        Form).distinct("form_id")
-    forms = [{"name": "Owned Forms", "list_items": []},
-             {"name": "Available Forms", "list_items": []}]
+    forms = Form.objects.all().distinct("form_id")
+    owned_forms = [{
+        "pk": f.pk,
+        "name": f.name,
+        "description": f.description,
+        "url": reverse('view_form', args=[f.pk]),
+        "edit": reverse('manage_create_form', args=[f.form_id])
+    } for f in forms if
+        request.user.has_perm("constellation_forms.form_owned_by", f)]
 
-    for form in owned_forms:
-        form.url = reverse('view_form', args=[form.form_id])
-        form.edit = reverse('manage_create_form', args=[form.form_id])
-        forms[0]["list_items"].append(form)
+    available_forms = [{
+        "name": f.name,
+        "description": f.description,
+        "url": reverse('view_form', args=[f.pk]),
+    } for f in forms if
+        request.user.has_perm("constellation_forms.form_owned_by", f) and
+        f.pk not in [a['pk'] for a in owned_forms]]
 
-    for form in available_forms:
-        if form not in owned_forms:
-            form.url = reverse('view_form', args=[form.form_id])
-            form.edit = reverse('manage_create_form', args=[form.form_id])
-            forms[1]["list_items"].append(form)
+    forms = [{"name": "Owned Forms", "list_items": owned_forms},
+             {"name": "Available Forms", "list_items": available_forms}]
 
     return render(request, 'constellation_forms/list.html', {
         'template_settings': template_settings,
