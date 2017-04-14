@@ -250,7 +250,6 @@ def list_submissions(request):
 
     staff = request.user.has_perm("constellation_forms.form_create")
     filter_query = {}
-    print(request.GET)
     if "username" in request.GET and len(request.GET['username']) > 0:
         r_username = request.GET['username']
         if User.objects.filter(username=r_username).exists():
