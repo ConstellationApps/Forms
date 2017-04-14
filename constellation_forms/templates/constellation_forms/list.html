@@ -6,9 +6,51 @@
 {{ block.super }}
 {% load static %}
 <link rel="stylesheet" href="{% static 'constellation_forms/css/forms.css' %}">
+<link rel="stylesheet" href="{% static 'constellation_forms/css/getmdl-select.min.css' %}">
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+{% load static %}
+<script src="{% static 'constellation_forms/js/getmdl-select.min.js' %}"></script>
+<script>
+  $('.query_button').click(function (){
+    $('#query_form').val($('#query_form').attr('data-val'));
+    console.log($('#query_form').val());
+    $('#form_search_form').submit();
+  })
+</script>
 {% endblock %}
 
 {% block content %}
+{% if list_type != 'Forms' %}
+<div id="filterCard" class="filter-card mdl-card mdl-cell--8-col mdl-cell--2-offset-desktop mdl-shadow--2dp mdl-grid">
+  <div class="mdl-card__supporting-text">
+    <form id="form_search_form">
+      <div class="pad_right mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth getmdl-select__fix-height">
+        <input class="mdl-textfield__input" type="text" id="query_form" name="form" tabIndex="-1" value="{{ query_form }}">
+        <label for="query_form">
+          <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+        </label>
+        <label for="query_form" class="mdl-textfield__label">Form</label>
+        <ul for="query_form" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+          <li class="mdl-menu__item" data-val="">All</li>
+          {% for form in forms %}
+          <li class="mdl-menu__item" data-val="{{ form.form_id }}">{{ form.name }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="pad_right mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="search_username" name="username">
+        <label class="mdl-textfield__label" for="search_username">Username</label>
+      </div>
+      <button type="button" class="query_button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab">
+        <i class="material-icons">filter_list</i>
+      </button>
+    </form>
+  </div>
+</div>
+{% endif %}
 <div id="formsCard" class="mdl-card mdl-cell--8-col mdl-cell--2-offset-desktop mdl-shadow--2dp mdl-grid">
   <div class="mdl-card__title">
     <h2 class="mdl-card__title-text">{{ list_type }}</h2>

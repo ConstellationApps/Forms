@@ -229,3 +229,22 @@ select:-moz-focusring {
     line-height: 36px;
     margin:10px;
 }
+
+.filter-card {
+    position: static;
+    margin-bottom: 20px;
+    min-height: unset;
+}
+
+#form_search_form {
+    display: inline-flex;
+    width: 100%;
+}
+
+#form_search_form .getmdl-select {
+    max-width: 300px;
+}
+
+.pad_right {
+    padding-right: 15px;
+}

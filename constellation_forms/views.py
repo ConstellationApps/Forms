@@ -1,5 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import (
+    Group,
+    User
+)
 from django.conf import settings
 from django.core import serializers
 from django.db import transaction
@@ -245,6 +248,25 @@ def list_submissions(request):
     template_settings = template_settings.settings_dict()
     submissions = FormSubmission.objects.all()
 
+    staff = request.user.has_perm("constellation_forms.form_create")
+    filter_query = {}
+    print(request.GET)
+    if "username" in request.GET and len(request.GET['username']) > 0:
+        r_username = request.GET['username']
+        if User.objects.filter(username=r_username).exists():
+            temp_user = User.objects.get(username=r_username)
+            filter_query["owner"] = temp_user
+    if "form" in request.GET and len(request.GET['form']) > 0:
+        r_form = request.GET['form']
+        if Form.objects.filter(form_id=r_form).exists():
+            temp_form = list(Form.objects.filter(form_id=r_form))
+            filter_query["form__in"] = temp_form
+
+    if staff and len(filter_query) > 0:
+        submissions = FormSubmission.objects.filter(**filter_query)
+    else:
+        submissions = FormSubmission.objects.all()
+
     forms = [{"name": "Pending Submissions", "list_items": []},
              {"name": "Incoming Submissions", "list_items": []},
              {"name": "Done Submissions", "list_items": []}]
@@ -259,6 +281,7 @@ def list_submissions(request):
 
     forms[1]["list_items"] = [{
         "name": f.form.name,
+        "owner": f.owner.username,
         "description": f.modified,
         "state": f.state,
         "pk": f.pk,
@@ -269,6 +292,7 @@ def list_submissions(request):
 
     forms[2]["list_items"] = [{
         "name": f.form.name,
+        "owner": f.owner.username,
         "description": f.modified,
         "state": f.state,
         "pk": f.pk,
@@ -281,6 +305,7 @@ def list_submissions(request):
         'template_settings': template_settings,
         'list_type': 'Form Submissions',
         'lists': forms,
+        'forms': Form.objects.all().distinct('form_id'),
     })
 
 
