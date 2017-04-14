@@ -1,3 +1,4 @@
+<span class="widget-start"></span>
 <h4>{{ widget.title }}</h4>
 {{ widget.description }}<br/>
 {% for choice in widget.choices %}
@@ -5,5 +6,5 @@
     <input type="radio" id="choice-{{ id }}-{{ forloop.counter }}" name="radio-{{ id }}" class="mdl-radio__button">
     <span class="mdl-radio__label choice-label">{{ choice }}</span>
 </label>
-<br/>
 {% endfor %}
+<span class="widget-end"></span>

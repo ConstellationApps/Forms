@@ -5,8 +5,9 @@
 {% block head %}
 {{ block.super }}
 {% load static %}
-<link rel="stylesheet" href="{% static 'constellation_forms/css/forms.css' %}">
-<link rel="stylesheet" href="{% static 'constellation_forms/css/getmdl-select.min.css' %}">
+<link rel="stylesheet" media="screen"  href="{% static 'constellation_forms/css/forms.css' %}">
+<link rel="stylesheet" media="print" href="{% static 'constellation_forms/css/print.css' %}">
+<link rel="stylesheet" media="screen" href="{% static 'constellation_forms/css/getmdl-select.min.css' %}">
 {% endblock %}
 
 {% block js %}

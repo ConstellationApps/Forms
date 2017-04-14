@@ -1,0 +1,36 @@
+/* label { */
+/*     display: none; */
+/* } */
+
+h1, h2, h3, h4, h5 {
+    margin: 0;
+    padding: 0;
+}
+
+.form-title {
+    text-align: center;
+    border-bottom: 1px solid #000000;
+}
+
+.form-submit {
+    display: none;
+}
+
+.form_version {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.form_menu {
+    display: none;
+}
+
+.widget-start {
+
+}
+
+.widget-end {
+    display: inline-block;
+    margin-bottom: 1em;
+}
