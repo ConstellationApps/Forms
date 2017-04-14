@@ -1,5 +1,7 @@
 /* exported submitForm */
 
+var message = document.querySelector('#message-toast');
+
 $(function() {
   setupValidation();
   $('.datefield').datepicker({
@@ -94,6 +96,9 @@ function submitForm() {
     'data': JSON.stringify(widgetForm),
   };
   $.post($(location).attr('href'), data, function(response) {
-       window.location.href = '/forms/view/list-submissions';
+    window.location.href = '/forms/view/list-submissions';
+  })
+  .fail(function(jqXHR) {
+    message.MaterialSnackbar.showSnackbar({message: 'An error occured.'});
   });
 }

@@ -11,6 +11,10 @@
 {% endblock %}
 
 {% block js %}
+<div id="message-toast" class="mdl-js-snackbar mdl-snackbar">
+    <div class="mdl-snackbar__text"></div>
+    <button class="mdl-snackbar__action" type="button"></button>
+</div>
 {{ block.super }}
 {% load static %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>

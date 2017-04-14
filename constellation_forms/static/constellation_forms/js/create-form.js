@@ -1,6 +1,8 @@
 /* global Handlebars componentHandler widgetPath Sortable formData */
 /* exported addWidget deleteWidget addChoice deleteChoice submitForm */
 
+var message = document.querySelector('#message-toast');
+
 /*
  * Enable dragging items around
  */
@@ -136,6 +138,9 @@ function submitForm() {
   };
   $.post($(location).attr('href'), data, function(response) {
     window.location.href = '/forms/view/list-forms';
+  })
+  .fail(function(jqXHR) {
+    message.MaterialSnackbar.showSnackbar({message: 'An error occured.'});
   });
 }
 
