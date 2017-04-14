@@ -1,20 +1,25 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from django.conf import settings
 from django.core import serializers
 from django.db import transaction
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django.http import (
+    HttpResponse,
+    HttpResponseForbidden,
+    HttpResponseRedirect
+)
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 
-from guardian.decorators import (
-    permission_required,
-    permission_required_or_403,
-)
+# from guardian.decorators import (
+#     permission_required,
+#     permission_required_or_403,
+# )
+
 from guardian.shortcuts import assign_perm
 
 from constellation_base.models import GlobalTemplateSettings
@@ -24,68 +29,78 @@ from .models import (
 )
 from .util import api_key_required
 
+from .util import PropertyJsonSerializer
+
 import csv
 import json
 
 
 class manage_create_form(View):
     @method_decorator(login_required)
-    @method_decorator(
-        permission_required('constellation_orderboard.add_board'))
     def get(self, request, form_id=None):
-        ''' Returns a page that allows for the creation of new forms '''
+        """ Returns a page that allows for the creation of new forms """
+        # We can"t use a method decorator here, because we need to check
+        # different conditions depending on whether or not a form_id is given
+        # Someone with add_form can add a new form or edit an existing form,
+        # and form owners can edit existing forms that they own
+        if not Form.can_edit(request.user, form_id):
+            return redirect("%s?next=%s" % (
+                settings.LOGIN_URL, request.path))
+
         template_settings = GlobalTemplateSettings(allowBackground=False)
         template_settings = template_settings.settings_dict()
         groups = [(g.name, g.pk) for g in Group.objects.all()]
 
         form = None
+        form_data = None
 
         if form_id is not None:
-            form = serializers.serialize(
-                "json",
-                Form.objects.filter(form_id=form_id)
+            form = Form.objects.filter(form_id=form_id).first()
+            form_data = serializers.serialize(
+                "json", Form.objects.filter(form_id=form_id),
             )
 
-        return render(request, 'constellation_forms/create-form.html', {
-            'form': form,
-            'visible_groups': groups,
-            'template_settings': template_settings,
+        return render(request, "constellation_forms/create-form.html", {
+            "form": form,
+            "form_data": form_data,
+            "visible_groups": groups,
+            "template_settings": template_settings,
         })
 
     @method_decorator(login_required)
-    @method_decorator(
-        permission_required('constellation_orderboard.add_board'))
     def post(self, request, form_id=None):
-        ''' Creates a form '''
-        form_data = json.loads(request.POST['data'])
-        title = form_data['meta']['title']
-        description = form_data['meta']['description']
+        """ Creates a form """
+        if not Form.can_edit(request.user, form_id):
+            return HttpResponseForbidden()
+        form_data = json.loads(request.POST["data"])
+        title = form_data["meta"]["title"]
+        description = form_data["meta"]["description"]
         widgets = []
         with transaction.atomic():
-            for widget in form_data['widgets']:
+            for widget in form_data["widgets"]:
                 temp_widget = {}
-                temp_widget['type'] = widget['type']
-                if 'title' in widget:
-                    temp_widget['title'] = widget['title']
-                if 'description' in widget:
-                    temp_widget['description'] = widget['description']
-                if 'required' in widget and widget['required'] == 'on':
-                    temp_widget['required'] = True
+                temp_widget["type"] = widget["type"]
+                if "title" in widget:
+                    temp_widget["title"] = widget["title"]
+                if "description" in widget:
+                    temp_widget["description"] = widget["description"]
+                if "required" in widget and widget["required"] == "on":
+                    temp_widget["required"] = True
                 else:
-                    temp_widget['required'] = False
-                if 'validator' in widget:
-                    temp_widget['validator'] = widget['validator']
-                if 'steps' in widget:
-                    temp_widget['steps'] = widget['steps']
-                choices = [(int(k.split('-')[1]), v) for k, v in widget.items()
-                           if 'choice' in k]
+                    temp_widget["required"] = False
+                if "validator" in widget:
+                    temp_widget["validator"] = widget["validator"]
+                if "steps" in widget:
+                    temp_widget["steps"] = widget["steps"]
+                choices = [(int(k.split("-")[1]), v) for k, v in widget.items()
+                           if "choice" in k]
                 if len(choices) > 0:
-                    if 'other-allowed' in widget and 'other-allowed' == 'on':
-                        temp_widget['other_allowed'] = True
+                    if "other-allowed" in widget and "other-allowed" == "on":
+                        temp_widget["other_allowed"] = True
                     else:
-                        temp_widget['other_allowed'] = False
+                        temp_widget["other_allowed"] = False
                     choices.sort()
-                    temp_widget['choices'] = [v[1] for v in choices]
+                    temp_widget["choices"] = [v[1] for v in choices]
                 widgets.append(temp_widget)
 
             # This is not safe, but it will work for now...
@@ -112,12 +127,12 @@ class manage_create_form(View):
 
             # Add permissions
             visible_group = Group.objects.get(
-                name=form_data['options']['visible'])
+                name=form_data["options"]["visible"])
             assign_perm("form_visible", visible_group, new_form)
-            owner_group = Group.objects.get(name=form_data['options']['owner'])
-            assign_perm("form_owner", owner_group, new_form)
+            owner_group = Group.objects.get(name=form_data["options"]["owner"])
+            assign_perm("form_owned_by", owner_group, new_form)
 
-        return HttpResponse(reverse('view_list_forms'))
+        return HttpResponse(reverse("view_list_forms"))
 
 
 class view_form(View):

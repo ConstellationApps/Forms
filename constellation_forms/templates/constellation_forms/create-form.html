@@ -2,6 +2,7 @@
 
 {% block title %}{{ template_settings.organization }} -- Create Form{% endblock %}
 
+
 {% block head %}
 {{ block.super }}
 {% load static %}
@@ -19,7 +20,7 @@
     var widgetPath = "{% static 'constellation_forms/js/widgets/' %}";
     var formData = '';
     {% if form %}
-    formData = JSON.parse("{{ form|escapejs }}")[0];
+    formData = JSON.parse("{{ form_data|escapejs }}")[0];
     {% endif %}
 </script>
 <script src="{% static 'constellation_forms/js/jquery-autobars.js' %}"></script>

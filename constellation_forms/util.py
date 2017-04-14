@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from .models import ApiKey
 
-
 def api_key_required():
     def deny(request):
         raise PermissionDenied

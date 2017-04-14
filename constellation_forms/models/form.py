@@ -74,30 +74,41 @@ class Form(models.Model):
     description = models.TextField(blank=True)
     elements = JSONField()
 
+    @classmethod
+    def can_edit(cls, user, form_id):
+        """ Returns whether or not the user provided has permission to edit a
+        new or existing form """
+        if (form_id is None):
+            return user.has_perm("constellation_forms.add_form")
+        else:
+            form = cls.objects.filter(form_id=form_id).first()
+            return (user.has_perm("constellation_forms.form_owned_by", form) or
+                    user.has_perm("constellation_forms.add_form"))
+
     @property
     def visible_by(self):
         """ Returns the group that has the form_visible permission """
-        visible_by = get_groups_with_perms(self, attach_perms=True)
-        if visible_by:
-            return list(filter(lambda x: 'form_visible' in visible_by[x],
-                               visible_by.keys()))[0]
+        assigned_perms = get_groups_with_perms(self, attach_perms=True)
+        if assigned_perms:
+            return list(filter(lambda x: 'form_visible' in assigned_perms[x],
+                               assigned_perms.keys()))[0]
         else:
             return ""
 
     @property
     def owned_by(self):
         """ Returns the group that has the form_owner permission """
-        owned_by = get_groups_with_perms(self, attach_perms=True)
-        if owned_by:
-            return list(filter(lambda x: 'form_owner' in owned_by[x],
-                               owned_by.keys()))[0]
+        assigned_perms = get_groups_with_perms(self, attach_perms=True)
+        if assigned_perms:
+            return list(filter(lambda x: 'form_owned_by' in assigned_perms[x],
+                               assigned_perms.keys()))[0]
         else:
             return ""
 
     class Meta:
         unique_together = (("form_id", "version"),)
         ordering = ("-form_id", "-version",)
-        db_table = 'form'
+        db_table = "form"
         permissions = (
             ("form_owned_by", "Form Owner"),
             ("form_visible", "Form is Visible")
