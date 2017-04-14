@@ -53,7 +53,17 @@ from guardian.shortcuts import get_groups_with_perms
 import re
 
 
+class FormQuerySet(models.query.QuerySet):
+    def get(self, **kwargs):
+        return super().filter(**kwargs).first()
+
+
+class FormManager(models.Manager.from_queryset(FormQuerySet)):
+    pass
+
+
 class Form(models.Model):
+    objects = FormManager()
     element_types = [
         "boolean",
         "checkbox",

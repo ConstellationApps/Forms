@@ -35,8 +35,23 @@ class FormSubmission(models.Model):
     owner = models.ForeignKey(User, blank=True, null=True)
     submission = JSONField()
 
+    @classmethod
+    def can_view(cls, user, form_submission_id):
+        form_submission = cls.objects.get(pk=form_submission_id)
+        if user == form_submission.owner:
+            return True
+        else:
+            return user.has_perm("constellation_forms.form_owned_by",
+                                 form_submission.form)
+
+    @classmethod
+    def can_approve(cls, user, form_submission_id):
+        form_submission = cls.objects.get(pk=form_submission_id)
+        return user.has_perm("constellation_forms.form_owned_by",
+                             form_submission.form)
+
     class Meta:
-        db_table = 'form_submission'
+        db_table = "form_submission"
         ordering = ("-modified",)
 
     def __str__(self):

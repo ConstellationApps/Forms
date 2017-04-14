@@ -15,21 +15,20 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 
-# from guardian.decorators import (
-#     permission_required,
-#     permission_required_or_403,
-# )
+from guardian.decorators import (
+    permission_required,
+    permission_required_or_403,
+)
 
-from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm, get_objects_for_user
 
 from constellation_base.models import GlobalTemplateSettings
 from .models import (
     Form,
     FormSubmission
 )
-from .util import api_key_required
 
-from .util import PropertyJsonSerializer
+from .util import api_key_required
 
 import csv
 import json
@@ -131,11 +130,15 @@ class manage_create_form(View):
             assign_perm("form_visible", visible_group, new_form)
             owner_group = Group.objects.get(name=form_data["options"]["owner"])
             assign_perm("form_owned_by", owner_group, new_form)
+            assign_perm("form_visible", owner_group, new_form)
 
         return HttpResponse(reverse("view_list_forms"))
 
 
 class view_form(View):
+    @method_decorator(login_required)
+    @method_decorator(permission_required('constellation_forms.form_visible',
+                                          (Form, 'form_id', 'form_id')))
     def get(self, request, form_id):
         ''' Returns a page that allows for the submittion of a created form '''
         template_settings = GlobalTemplateSettings(allowBackground=False)
@@ -147,6 +150,9 @@ class view_form(View):
             'template_settings': template_settings,
         })
 
+    @method_decorator(permission_required_or_403(
+        'constellation_forms.form_visible',
+        (Form, 'form_id', 'form_id')))
     def post(self, request, form_id):
         ''' Creates a form '''
         form = Form.objects.filter(form_id=form_id).first()
@@ -167,8 +173,12 @@ class view_form(View):
 
 
 class view_form_submission(View):
+    @method_decorator(login_required)
     def get(self, request, form_submission_id):
         ''' Returns a page that displays a specific form submission instance'''
+        if not FormSubmission.can_view(request.user, form_submission_id):
+            return redirect("%s?next=%s" % (
+                settings.LOGIN_URL, request.path))
         template_settings = GlobalTemplateSettings(allowBackground=False)
         template_settings = template_settings.settings_dict()
         submission = FormSubmission.objects.get(pk=form_submission_id)
@@ -181,7 +191,6 @@ class view_form_submission(View):
                 element[tag] = submission.form.elements[index][tag]
             element['value'] = value
             submission_data.append(element)
-        print(submission_data)
 
         return render(request, 'constellation_forms/view-submission.html', {
             'template_settings': template_settings,
@@ -195,52 +204,100 @@ class view_form_submission(View):
         })
 
 
+@login_required
 def list_forms(request):
     ''' Returns a page that includes a list of available forms '''
     template_settings = GlobalTemplateSettings(allowBackground=False)
     template_settings = template_settings.settings_dict()
-    forms_query = Form.objects.distinct('form_id')
-    forms = []
-    for form in forms_query:
+    owned_forms = get_objects_for_user(
+        request.user,
+        "constellation_forms.form_owned_by",
+        Form).distinct("form_id")
+    available_forms = get_objects_for_user(
+        request.user,
+        "constellation_forms.form_visible",
+        Form).distinct("form_id")
+    forms = [{"name": "Owned Forms", "list_items": []},
+             {"name": "Available Forms", "list_items": []}]
+
+    for form in owned_forms:
         form.url = reverse('view_form', args=[form.form_id])
         form.edit = reverse('manage_create_form', args=[form.form_id])
-        forms.append(form)
+        forms[0]["list_items"].append(form)
+
+    for form in available_forms:
+        if form not in owned_forms:
+            form.url = reverse('view_form', args=[form.form_id])
+            form.edit = reverse('manage_create_form', args=[form.form_id])
+            forms[1]["list_items"].append(form)
 
     return render(request, 'constellation_forms/list.html', {
         'template_settings': template_settings,
         'list_type': 'Forms',
-        'list_items': forms,
+        'lists': forms,
     })
 
 
+@login_required
 def list_submissions(request):
     ''' Returns a page that includes a list of submitted forms '''
     template_settings = GlobalTemplateSettings(allowBackground=False)
     template_settings = template_settings.settings_dict()
     submissions = FormSubmission.objects.all()
-    submissions = [{
+
+    forms = [{"name": "Pending Submissions", "list_items": []},
+             {"name": "Incoming Submissions", "list_items": []},
+             {"name": "Done Submissions", "list_items": []}]
+
+    forms[0]["list_items"] = [{
         "name": f.form.name,
         "description": f.modified,
         "state": f.state,
         "pk": f.pk,
         "url": reverse('view_form_submission', args=[f.pk]),
-    } for f in submissions]
+    } for f in submissions if request.user == f.owner and f.state == 1]
+
+    forms[1]["list_items"] = [{
+        "name": f.form.name,
+        "description": f.modified,
+        "state": f.state,
+        "pk": f.pk,
+        "url": reverse('view_form_submission', args=[f.pk]),
+    } for f in submissions
+        if (request.user.has_perm("constellation_forms.form_owned_by", f.form)
+            and (f.state == 1))]
+
+    forms[2]["list_items"] = [{
+        "name": f.form.name,
+        "description": f.modified,
+        "state": f.state,
+        "pk": f.pk,
+        "url": reverse('view_form_submission', args=[f.pk]),
+    } for f in submissions
+        if (request.user.has_perm("constellation_forms.form_owned_by", f.form)
+            or request.user == f.owner) and (f.state == 2 or f.state == 3)]
 
     return render(request, 'constellation_forms/list.html', {
         'template_settings': template_settings,
         'list_type': 'Form Submissions',
-        'list_items': submissions,
+        'lists': forms,
     })
 
 
+@login_required
 def approve_submission(request, form_submission_id):
+    if not FormSubmission.can_approve(request.user, form_submission_id):
+        return HttpResponseForbidden()
     submission = FormSubmission.objects.get(pk=form_submission_id)
     submission.state = 2
     submission.save()
     return HttpResponseRedirect(reverse('view_list_submissions'))
 
 
+@login_required
 def deny_submission(request, form_submission_id):
+    if not FormSubmission.can_approve(request.user, form_submission_id):
+        return HttpResponseForbidden()
     submission = FormSubmission.objects.get(pk=form_submission_id)
     submission.state = 3
     submission.save()
