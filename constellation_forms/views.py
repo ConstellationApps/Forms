@@ -217,7 +217,7 @@ def list_forms(request):
         "pk": f.pk,
         "name": f.name,
         "description": f.description,
-        "url": reverse('view_form', args=[f.pk]),
+        "url": reverse('view_form', args=[f.form_id]),
         "edit": reverse('manage_create_form', args=[f.form_id])
     } for f in forms if
         request.user.has_perm("constellation_forms.form_owned_by", f)]
@@ -225,7 +225,7 @@ def list_forms(request):
     available_forms = [{
         "name": f.name,
         "description": f.description,
-        "url": reverse('view_form', args=[f.pk]),
+        "url": reverse('view_form', args=[f.form_id]),
     } for f in forms if
         request.user.has_perm("constellation_forms.form_owned_by", f) and
         f.pk not in [a['pk'] for a in owned_forms]]
