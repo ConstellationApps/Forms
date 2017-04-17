@@ -3,6 +3,7 @@ from django.conf.urls import url
 from . import views
 
 
+app_name = 'constellation_forms'
 urlpatterns = [
     # Management Functions
     url(r'^manage/create-form$', views.manage_create_form.as_view(),

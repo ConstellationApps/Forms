@@ -6,19 +6,19 @@
         <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">pageview</i>
-                <a href="{% url 'view_list_forms' %}">View Available Forms</a>
+                <a href="{% url 'constellation_forms:view_list_forms' %}">View Available Forms</a>
             </span>
         </li>
         <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">markunread_mailbox</i>
-                <a href="{% url 'view_list_submissions' %}">View Submitted Forms</a>
+                <a href="{% url 'constellation_forms:view_list_submissions' %}">View Submitted Forms</a>
             </span>
         </li>
         <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">create</i>
-                <a href="{% url 'manage_create_form' %}">Create New Form</a>
+                <a href="{% url 'constellation_forms:manage_create_form' %}">Create New Form</a>
             </span>
         </li>
     </ul>
