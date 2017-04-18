@@ -51,7 +51,7 @@ class Form(models.Model):
     not affect previously created/submitted forms
 
     Typically, we would see disadvantages. Primarily, queries are more complex,
-    and objects are not related.  However, since we don't need to query based
+    and objects are not related.  However, since we don"t need to query based
     on the contents of these fields, this does not affect the application.
     """
 
@@ -93,7 +93,7 @@ class Form(models.Model):
         """ Returns the group that has the form_visible permission """
         assigned_perms = get_groups_with_perms(self, attach_perms=True)
         if assigned_perms:
-            return list(filter(lambda x: 'form_visible' in assigned_perms[x],
+            return list(filter(lambda x: "form_visible" in assigned_perms[x],
                                assigned_perms.keys()))[0]
         else:
             return ""
@@ -103,7 +103,7 @@ class Form(models.Model):
         """ Returns the group that has the form_owner permission """
         assigned_perms = get_groups_with_perms(self, attach_perms=True)
         if assigned_perms:
-            return list(filter(lambda x: 'form_owned_by' in assigned_perms[x],
+            return list(filter(lambda x: "form_owned_by" in assigned_perms[x],
                                assigned_perms.keys()))[0]
         else:
             return ""

@@ -15,7 +15,7 @@ class Validator(models.Model):
     regex = models.TextField()
 
     class Meta:
-        db_table = 'validators'
+        db_table = "validators"
 
     def __str__(self):
         """<name> (<regex>)"""

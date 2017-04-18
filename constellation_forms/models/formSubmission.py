@@ -20,7 +20,7 @@ class FormSubmission(models.Model):
     Attributes:
 
     * form - the specific form instance that the submission references
-    * state - the state field as specified by the 'states' list below
+    * state - the state field as specified by the "states" list below
     * modified - last date modified
     * owner - user submitting the form
     * submission - serialized submission information

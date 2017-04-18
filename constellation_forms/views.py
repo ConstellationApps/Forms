@@ -41,7 +41,7 @@ class manage_create_form(View):
     @method_decorator(login_required)
     def get(self, request, form_id=None):
         """ Returns a page that allows for the creation of new forms """
-        # We can"t use a method decorator here, because we need to check
+        # We can't use a method decorator here, because we need to check
         # different conditions depending on whether or not a form_id is given
         # Someone with add_form can add a new form or edit an existing form,
         # and form owners can edit existing forms that they own
