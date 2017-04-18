@@ -28,7 +28,8 @@ from guardian.shortcuts import assign_perm
 from constellation_base.models import GlobalTemplateSettings
 from .models import (
     Form,
-    FormSubmission
+    FormSubmission,
+    Log,
 )
 
 from .util import api_key_required
@@ -187,6 +188,7 @@ class view_form_submission(View):
         template_settings = GlobalTemplateSettings(allowBackground=False)
         template_settings = template_settings.settings_dict()
         submission = FormSubmission.objects.get(pk=form_submission_id)
+        log_entries = Log.objects.filter(submission=submission)
         submission_data = []
         for index, value in enumerate(submission.submission):
             element = {}
@@ -198,6 +200,8 @@ class view_form_submission(View):
             submission_data.append(element)
 
         return render(request, 'constellation_forms/view-submission.html', {
+            'can_approve': FormSubmission.can_approve(request.user,
+                                                      form_submission_id),
             'template_settings': template_settings,
             'name': submission.form.name,
             'description': submission.form.description,
@@ -206,7 +210,25 @@ class view_form_submission(View):
             'widgets': submission_data,
             'form_id': submission.form.form_id,
             'version': submission.form.version,
+            'log_entries': log_entries,
         })
+
+    @method_decorator(login_required)
+    def post(self, request, form_submission_id):
+        submission = FormSubmission.objects.get(pk=form_submission_id)
+        new_log = Log()
+        new_log.message = request.POST["message"]
+        if "private" not in request.POST or request.POST["private"] == "off":
+            new_log.private = False
+        else:
+            new_log.private = True
+        new_log.submission = submission
+        new_log.owner = request.user
+        new_log.clean()
+        new_log.save()
+
+        return HttpResponseRedirect(reverse('constellation_forms:view_form_submission',
+                                    args=[form_submission_id]))
 
 
 @login_required
@@ -230,7 +252,7 @@ def list_forms(request):
         "description": f.description,
         "url": reverse('constellation_forms:view_form', args=[f.form_id]),
     } for f in forms if
-        request.user.has_perm("constellation_forms.form_owned_by", f) and
+        request.user.has_perm("constellation_forms.form_visible", f) and
         f.pk not in [a['pk'] for a in owned_forms]]
 
     forms = [{"name": "Owned Forms", "list_items": owned_forms},

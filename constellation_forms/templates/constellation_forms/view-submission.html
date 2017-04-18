@@ -6,12 +6,32 @@
 {{ block.super }}
 {% load static %}
 <link rel="stylesheet" media="screen" href="{% static 'constellation_forms/css/forms.css' %}">
-<link rel="stylesheet" media="print" href="{% static 'constellation_forms/css/print.css' %}"
+<link rel="stylesheet" media="print" href="{% static 'constellation_forms/css/print.css' %}">
+<style>
+    .log-cell {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .log-title {
+        background: #3f51b5;
+        color: white;
+    }
+
+    .log-message {
+        width: unset;
+        display: inline-flex;
+    }
+
+    .log-private {
+        color: red;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="mdl-grid form" id="form" style="width:100%">
-    <div class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-grid" id="form-pane">
+    <div class="mdl-card mdl-cell mdl-cell--8-col mdl-shadow--2dp mdl-grid" id="form-pane">
         <div class="mdl-card__title form-title mdl-shadow--3dp">
             <h2>{{ name }}</h2>
             <span class="form-description"><h4>{{ description }}</h4></span>
@@ -27,6 +47,7 @@
                 {% endfor %}
             </div>
         </div>
+        {% if can_approve %}
         <div class="mdl-card__menu form_menu">
             <a href="{% url 'constellation_forms:view_approve_submission' id %}">
                 <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored form_menu_approve">
@@ -39,8 +60,46 @@
                 </button>
             </a>
         </div>
+        {% endif %}
         <div class="mdl-card__actions mdl-card--border">
             <span class="form_version">Form {{ form_id }}.{{ version }}</span>
+        </div>
+    </div>
+    <div class="log-cell mdl-cell mdl-cell--4-col">
+        <div class="log-card mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title log-title mdl-shadow--2dp">
+                History
+            </div>
+            <div class="mdl-card__supporting-text">
+                {% for entry in log_entries %}
+                {% if not entry.private or can_approve %}
+                <div class="log-entry{% if entry.private %} log-private{% endif %}">
+                    {{entry.owner.username }}: {{ entry.message }}
+                </div>
+                {% endif %}
+                {% empty %}
+                No Comments
+                {% endfor %}
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <form action="#" method="post">
+                    {% csrf_token %}
+                    <div class="log-message mdl-textfield mdl-js-textfield">
+                        <input class="mdl-textfield__input" type="text" name="message" id="log_entry">
+                        <label class="mdl-textfield__label" for="log_entry">Message...</label>
+                    </div>
+                    {% if can_approve %}
+                    <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="log_private">
+                        <input type="checkbox" id="log_private" class="mdl-icon-toggle__input" name="private" checked>
+                        <i class="mdl-icon-toggle__label material-icons">visibility_off</i>
+                    </label>
+                    {% endif %}
+                    <button type="submit" class="mdl-button mdl-js-button mdl-button--icon">
+                        <i class="material-icons">send</i>
+                    </button>
+
+                </form>
+            </div>
         </div>
     </div>
 </div>
