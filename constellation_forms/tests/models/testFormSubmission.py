@@ -65,7 +65,7 @@ class FormSubmissionModelTest(TestCase):
 
     def test_valid_submission_choice(self):
         form = Form.objects.get(form_id=2, version=1)
-        submission = ["pepperoni"]
+        submission = [["pepperoni"]]
         form_sub = FormSubmission(form=form, state=0, modified=timezone.now(),
                                   submission=submission)
         form_sub.full_clean()

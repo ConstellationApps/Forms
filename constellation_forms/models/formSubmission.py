@@ -80,9 +80,11 @@ class FormSubmission(models.Model):
             if "choices" in element and sub_element:
                 if ("other_choice" not in element or
                         not element["other_choice"]):
-                    if (element["type"] == "dropdown"
-                            or element["type"] == "radio"):
+                    if (element["type"] == "dropdown"):
                         if sub_element not in element["choices"]:
+                            raise ValidationError("Invalid choice.")
+                    elif (element["type"] == "radio"):
+                        if sub_element[0] not in element["choices"]:
                             raise ValidationError("Invalid choice.")
                     elif element["type"] == "checkbox":
                         for c in sub_element:
