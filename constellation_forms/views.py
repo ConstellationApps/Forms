@@ -135,7 +135,8 @@ class manage_create_form(View):
             assign_perm("form_owned_by", owner_group, new_form)
             assign_perm("form_visible", owner_group, new_form)
 
-        return HttpResponse(reverse("constellation_forms:view_list_forms"))
+        return HttpResponse(
+            reverse("constellation_forms:view_list_forms"))
 
 
 class view_form(View):
@@ -172,7 +173,8 @@ class view_form(View):
         )
         new_submission.full_clean()
         new_submission.save()
-        return HttpResponse(reverse('constellation_forms:view_list_submissions'))
+        return HttpResponse(
+            reverse('constellation_forms:view_list_submissions'))
 
 
 class view_form_submission(View):
@@ -218,7 +220,8 @@ def list_forms(request):
         "name": f.name,
         "description": f.description,
         "url": reverse('constellation_forms:view_form', args=[f.form_id]),
-        "edit": reverse('constellation_forms:manage_create_form', args=[f.form_id])
+        "edit": reverse('constellation_forms:manage_create_form',
+                        args=[f.form_id])
     } for f in forms if
         request.user.has_perm("constellation_forms.form_owned_by", f)]
 
@@ -274,7 +277,8 @@ def list_submissions(request):
         "description": f.modified,
         "state": f.state,
         "pk": f.pk,
-        "url": reverse('constellation_forms:view_form_submission', args=[f.pk]),
+        "url": reverse('constellation_forms:view_form_submission',
+                       args=[f.pk]),
     } for f in submissions if request.user == f.owner and f.state == 1]
 
     forms[1]["list_items"] = [{
@@ -283,7 +287,8 @@ def list_submissions(request):
         "description": f.modified,
         "state": f.state,
         "pk": f.pk,
-        "url": reverse('constellation_forms:view_form_submission', args=[f.pk]),
+        "url": reverse('constellation_forms:view_form_submission',
+                       args=[f.pk]),
     } for f in submissions
         if (request.user.has_perm("constellation_forms.form_owned_by", f.form)
             and (f.state == 1))]
@@ -294,7 +299,8 @@ def list_submissions(request):
         "description": f.modified,
         "state": f.state,
         "pk": f.pk,
-        "url": reverse('constellation_forms:view_form_submission', args=[f.pk]),
+        "url": reverse('constellation_forms:view_form_submission',
+                       args=[f.pk]),
     } for f in submissions
         if (request.user.has_perm("constellation_forms.form_owned_by", f.form)
             or request.user == f.owner) and (f.state == 2 or f.state == 3)]
@@ -314,7 +320,8 @@ def approve_submission(request, form_submission_id):
     submission = FormSubmission.objects.get(pk=form_submission_id)
     submission.state = 2
     submission.save()
-    return HttpResponseRedirect(reverse('constellation_forms:view_list_submissions'))
+    return HttpResponseRedirect(
+        reverse('constellation_forms:view_list_submissions'))
 
 
 @login_required
@@ -324,7 +331,8 @@ def deny_submission(request, form_submission_id):
     submission = FormSubmission.objects.get(pk=form_submission_id)
     submission.state = 3
     submission.save()
-    return HttpResponseRedirect(reverse('constellation_forms:view_list_submissions'))
+    return HttpResponseRedirect(
+        reverse('constellation_forms:view_list_submissions'))
 
 
 @csrf_exempt
