@@ -337,22 +337,38 @@ def list_submissions(request):
 
 @login_required
 def approve_submission(request, form_submission_id):
-    if not FormSubmission.can_approve(request.user, form_submission_id):
-        return HttpResponseForbidden()
-    submission = FormSubmission.objects.get(pk=form_submission_id)
-    submission.state = 2
-    submission.save()
+    with transaction.atomic():
+        if not FormSubmission.can_approve(request.user, form_submission_id):
+            return HttpResponseForbidden()
+        submission = FormSubmission.objects.get(pk=form_submission_id)
+        submission.state = 2
+        new_log = Log()
+        new_log.owner = request.user
+        new_log.submission = submission
+        new_log.private = False
+        new_log.message = "Submission Approved by {0} {1}".format(request.user.first_name, request.user.last_name)
+        new_log.mtype = 3
+        new_log.save()
+        submission.save()
     return HttpResponseRedirect(
         reverse('constellation_forms:view_list_submissions'))
 
 
 @login_required
 def deny_submission(request, form_submission_id):
-    if not FormSubmission.can_approve(request.user, form_submission_id):
-        return HttpResponseForbidden()
-    submission = FormSubmission.objects.get(pk=form_submission_id)
-    submission.state = 3
-    submission.save()
+    with transaction.atomic():
+        if not FormSubmission.can_approve(request.user, form_submission_id):
+            return HttpResponseForbidden()
+        submission = FormSubmission.objects.get(pk=form_submission_id)
+        submission.state = 3
+        new_log = Log()
+        new_log.owner = request.user
+        new_log.submission = submission
+        new_log.private = False
+        new_log.message = "Submission Disapproved by {0} {1}".format(request.user.first_name, request.user.last_name)
+        new_log.mtype = 3
+        new_log.save()
+        submission.save()
     return HttpResponseRedirect(
         reverse('constellation_forms:view_list_submissions'))
 

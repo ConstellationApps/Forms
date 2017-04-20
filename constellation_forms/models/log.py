@@ -12,7 +12,14 @@ class Log(models.Model):
     * owner - user submitting the message
     * submission - form submission associated
     * timestamp - time of submission entry
-
+    * private - display to non-owners?
+    * message - log entry
+    * mtype - type of log entry
+      * 1 - user message (default)
+      * 2 - system action
+      * 3 - form status change
+      * 4 - attached file
+    * file - attached file entry
     """
 
     owner = models.ForeignKey(User, blank=True, null=True)
@@ -20,6 +27,7 @@ class Log(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     private = models.BooleanField(default=False)
     message = models.TextField(blank=True)
+    mtype = models.IntegerField(default=1)
     file = models.FileField(upload_to='log_files/')
 
     class Meta:
