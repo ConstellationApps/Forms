@@ -269,7 +269,7 @@ select:-moz-focusring {
     font-size: 13px;
 }
 
-.mdl-list__item .mdl-list__item-secondary-content {
+.log-entry .mdl-list__item-secondary-content {
     position: absolute;
     right: 5px;
     top: 5px;
