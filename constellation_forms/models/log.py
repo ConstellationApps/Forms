@@ -32,4 +32,4 @@ class Log(models.Model):
 
     class Meta:
         db_table = "form_log"
-        ordering = ("-timestamp",)
+        ordering = ("timestamp",)

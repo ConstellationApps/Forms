@@ -25,14 +25,6 @@
     text-decoration: none;
 }
 
-.form_menu_approve {
-    background: #4caf50 !important;
-}
-
-.form_menu_deny {
-    background: #f44336 !important;
-}
-
 .state-icon {
     padding-right: 15px;
 }
@@ -154,15 +146,17 @@ select:-moz-focusring {
 }
 
 .form-title {
-    display: block;
     background: #3f51b5;
     color: #ffffff;
-    width: 100%;
+    display: block;
     height: 175px;
+    width: 100%;
 }
 
 .submission-text {
-    text-decoration: underline;
+    border-left: 1px solid #e0e0e0;
+    margin: 10px;
+    padding: 24px 24px 24px 24px;
 }
 
 /* Don't invalidate on first load */
@@ -182,7 +176,7 @@ select:-moz-focusring {
 }
 
 .mdl-card {
-    padding: 0px;
+    padding: 0;
 }
 
 /* Stars */
@@ -251,4 +245,56 @@ select:-moz-focusring {
 
 .pad_right {
     padding-right: 15px;
+}
+
+.submission-holder {
+    margin: 0;
+    width: 100%;
+}
+
+.log-card {
+    position: relative;
+}
+
+.log-entry {
+    margin-bottom: 1px;
+    position: relative;
+}
+
+.log-private {
+    background-color: #ddd;
+}
+
+.log-timestamp {
+    font-size: 13px;
+}
+
+.mdl-list__item .mdl-list__item-secondary-content {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+
+.mdl-list__item .mdl-list__item-secondary-content i{
+    font-size: 15px;
+}
+
+.widgets-holder {
+    border-right: 1px solid #cccccc;
+}
+
+.mdl-list__item--three-line .mdl-list__item-text-body {
+    height: auto;
+    margin-left: 56px;
+}
+
+.mdl-list__item--three-line,
+.mdl-list__item--three-line .mdl-list__item-primary-content {
+    height: auto;
+}
+
+.visible-toggle-button {
+    position: absolute;
+    right: 0;
+    top: 10px;
 }

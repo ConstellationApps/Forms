@@ -8,98 +8,115 @@
 <link rel="stylesheet" media="screen" href="{% static 'constellation_forms/css/forms.css' %}">
 <link rel="stylesheet" media="print" href="{% static 'constellation_forms/css/print.css' %}">
 <style>
-    .log-cell {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    .log-title {
-        background: #3f51b5;
-        color: white;
-    }
-
-    .log-message {
-        width: unset;
-        display: inline-flex;
-    }
-
-    .log-private {
-        color: red;
-    }
 </style>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+{% load static %}
+<script src="{% static 'constellation_forms/js/view-submission.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 <div class="mdl-grid form" id="form" style="width:100%">
-    <div class="mdl-card mdl-cell mdl-cell--8-col mdl-shadow--2dp mdl-grid" id="form-pane">
+    <div class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp mdl-grid" id="form-pane">
         <div class="mdl-card__title form-title mdl-shadow--3dp">
             <h2>{{ name }}</h2>
             <span class="form-description"><h4>{{ description }}</h4></span>
+            {% if can_approve %}
+            <div class="mdl-card__menu form_menu">
+                <a href="{% url 'constellation_forms:view_approve_submission' id %}">
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--green mdl-color-text--white form_menu_approve">
+                        <i class="material-icons">check</i>
+                    </button>
+                </a>
+                <a href="{% url 'constellation_forms:view_deny_submission' id %}">
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--red-A700 mdl-color-text--white form_menu_deny">
+                        <i class="material-icons">block</i>
+                    </button>
+                </a>
+            </div>
+            {% endif %}
         </div>
-        <div class="mdl-card__supporting-text">
-            <div id="widgets-holder">
+        <div class="submission-holder mdl-card__supporting-text mdl-grid">
+            <div id="widgets-holder" class="mdl-cell mdl-cell--7-col widgets-holder">
                 {% for widget in widgets %}
-                <form class="form-widget">
+                <div class="form-widget">
                     {% with "constellation_forms/submission_widgets/"|add:widget.type|add:".html" as template %}
                     {% include template with widget=widget %}
                     {% endwith %}
-                </form>
-                {% endfor %}
-            </div>
-        </div>
-        {% if can_approve %}
-        <div class="mdl-card__menu form_menu">
-            <a href="{% url 'constellation_forms:view_approve_submission' id %}">
-                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored form_menu_approve">
-                    <i class="material-icons">check</i>
-                </button>
-            </a>
-            <a href="{% url 'constellation_forms:view_deny_submission' id %}">
-                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored form_menu_deny">
-                    <i class="material-icons">block</i>
-                </button>
-            </a>
-        </div>
-        {% endif %}
-        <div class="mdl-card__actions mdl-card--border">
-            <span class="form_version">Form {{ form_id }}.{{ version }}</span>
-        </div>
-    </div>
-    <div class="log-cell mdl-cell mdl-cell--4-col">
-        <div class="log-card mdl-card mdl-shadow--2dp">
-            <div class="mdl-card__title log-title mdl-shadow--2dp">
-                History
-            </div>
-            <div class="mdl-card__supporting-text">
-                {% for entry in log_entries %}
-                {% if not entry.private or can_approve %}
-                <div class="log-entry{% if entry.private %} log-private{% endif %}">
-                    {{entry.owner.username }}: {{ entry.message }}
                 </div>
-                {% endif %}
-                {% empty %}
-                No Comments
                 {% endfor %}
             </div>
-            <div class="mdl-card__actions mdl-card--border">
-                <form action="#" method="post">
-                    {% csrf_token %}
-                    <div class="log-message mdl-textfield mdl-js-textfield">
-                        <input class="mdl-textfield__input" type="text" name="message" id="log_entry">
-                        <label class="mdl-textfield__label" for="log_entry">Message...</label>
-                    </div>
-                    {% if can_approve %}
-                    <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="log_private">
-                        <input type="checkbox" id="log_private" class="mdl-icon-toggle__input" name="private" checked>
+            <div class="log-cell mdl-cell mdl-cell--5-col">
+                {% load humanize %}
+                <div class="log-card">
+                    <h2>History</h2>
+                    <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect visible-toggle-button" for="visibility-toggle">
+                        <input type="checkbox" id="visibility-toggle" class="mdl-icon-toggle__input">
                         <i class="mdl-icon-toggle__label material-icons">visibility_off</i>
                     </label>
-                    {% endif %}
-                    <button type="submit" class="mdl-button mdl-js-button mdl-button--icon">
-                        <i class="material-icons">send</i>
-                    </button>
+                    <ul class="mdl-list">
+                        {% for entry in log_entries %}
+                        {% if not entry.private or can_approve %}
+                        <li class="mdl-list__item mdl-list__item--three-line log-entry{% if entry.private %} log-private{% endif %}">
+                            <span class="mdl-list__item-primary-content">
+                                <i class="material-icons mdl-list__item-avatar">
+                                    {% if entry.mtype == 1 %}
+                                    short_text
+                                    {% elif entry.mtype == 2 %}
+                                    account_circle
+                                    {% elif entry.mtype == 3 %}
+                                    thumbs_up_down
+                                    {% elif entry.mtype == 4 %}
+                                    attach_file
+                                    {% endif %}
+                                </i>
+                                <span>{{ entry.owner.username }}</span>
+                                <span class="mdl-list__item-text-body">{{ entry.message }}</span>
+                                <span class="mdl-list__item-text-body">
+                                    <span title="{{ entry.timestamp }}" class="log-timestamp">{{ entry.timestamp|naturaltime }}</span>
+                                </span>
+                            </span>
+                            {% if can_approve %}
+                            <span class="mdl-list__item-secondary-content"><i class="material-icons">
+                                    {% if entry.private %}lock{% else %}visibility{% endif %}
+                            </i></span>
+                            {% endif %}
+                        </li>
+                        {% endif %}
+                        {% empty %}
+                        No Comments
+                        {% endfor %}
+                    </ul>
+                    <hr/>
+                    <h4>New Comment</h4>
+                    <form action="#" method="post" class="mdl-grid">
+                        {% csrf_token %}
+                        <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col">
+                            <textarea class="mdl-textfield__input" type="text" rows= "3" id="message" name="message"></textarea>
+                            <label class="mdl-textfield__label" for="message">Message...</label>
+                        </div>
+                        {% if can_approve %}
+                        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-cell mdl-cell--6-col" for="log_private">
+                            <input type="checkbox" id="log_private" class="mdl-checkbox__input" name="private">
+                            <span class="mdl-checkbox__label">Private message</span>
+                        </label>
+                        {% endif %}
+                        <div class="mdl-layout-spacer"></div>
+                        <span class="mdl-cell mdl-cell--2-col">
+                            <div class="mdl-layout-spacer"></div>
+                            <button type="submit" class="mdl-button mdl-js-button mdl-button--icon">
+                                <i class="material-icons">send</i>
+                            </button>
+                        </span>
 
-                </form>
+                    </form>
+                </div>
             </div>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+            <span class="form_version">Form {{ form_id }}.{{ version }}</span>
         </div>
     </div>
 </div>
