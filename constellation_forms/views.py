@@ -227,7 +227,7 @@ class view_form_submission(View):
         new_log.clean()
         new_log.save()
 
-        return HttpResponseRedirect(reverse('constellation_forms:view_form_submission',
+        return HttpResponseRedirect(reverse('constellation_forms:view_form_submission', # noqa 401 (can't split a string easily here...)
                                     args=[form_submission_id]))
 
 
@@ -346,7 +346,9 @@ def approve_submission(request, form_submission_id):
         new_log.owner = request.user
         new_log.submission = submission
         new_log.private = False
-        new_log.message = "Submission Approved by {0} {1}".format(request.user.first_name, request.user.last_name)
+        new_log.message = "Submission Approved by {0} {1}"\
+                          .format(request.user.first_name,
+                                  request.user.last_name)
         new_log.mtype = 3
         new_log.save()
         submission.save()
@@ -365,7 +367,9 @@ def deny_submission(request, form_submission_id):
         new_log.owner = request.user
         new_log.submission = submission
         new_log.private = False
-        new_log.message = "Submission Disapproved by {0} {1}".format(request.user.first_name, request.user.last_name)
+        new_log.message = "Submission Disapproved by {0} {1}"\
+                          .format(request.user.first_name,
+                                  request.user.last_name)
         new_log.mtype = 3
         new_log.save()
         submission.save()
