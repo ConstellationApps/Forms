@@ -136,6 +136,17 @@ class manage_create_form(View):
             assign_perm("form_owned_by", owner_group, new_form)
             assign_perm("form_visible", owner_group, new_form)
 
+            new_log = Log()
+            new_log.owner = request.user
+            new_log.submission = new_form
+            new_log.private = False
+            if len(Log.objects.filter(form=new_form)):
+                new_log.message("Submission Updated")
+            else:
+                new_log.message("New form submitted")
+            new_log.mtype = 2
+            new_log.save()
+
         return HttpResponse(
             reverse("constellation_forms:view_list_forms"))
 
