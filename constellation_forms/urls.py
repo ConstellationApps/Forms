@@ -41,4 +41,7 @@ urlpatterns = [
 
     url(r'^view/dashboard$', views.view_dashboard,
         name="view_dashboard"),
+
+    url(r'^files/log/(?P<log_id>\d+)$', views.view_log_file,
+        name="view_log_file"),
 ]

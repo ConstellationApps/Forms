@@ -10,7 +10,8 @@ from django.shortcuts import redirect, render
 from django.http import (
     HttpResponse,
     HttpResponseForbidden,
-    HttpResponseRedirect
+    HttpResponseRedirect,
+    Http404,
 )
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -348,6 +349,26 @@ def list_submissions(request):
 
 
 @login_required
+def view_log_file(request, log_id):
+    if not Log.objects.filter(pk=log_id).exists():
+        raise Http404("File not found")
+    log_entry = Log.objects.get(pk=log_id)
+    if not FormSubmission.can_view(request.user, log_entry.submission.pk):
+        return HttpResponseForbidden("Permission Denied for File.")
+    response = HttpResponse(content_type=log_entry.content_type)
+    content_d = "attachment; filename={0}".format(log_entry.file_name)
+    response["Content-Disposition"] = content_d
+
+    if settings.DEBUG:
+        response.content = log_entry.file.read()
+    else:
+        file_path = "media/" + log_entry.file.name
+        response['X-Accel-Redirect'] = "/" + file_path
+        print(file_path)
+    return response
+
+
+@login_required
 def approve_submission(request, form_submission_id):
     with transaction.atomic():
         if not FormSubmission.can_approve(request.user, form_submission_id):
@@ -423,6 +444,7 @@ def api_export(request, form_id):
                     line.append(submission.submission[index])
             writer.writerow(line)
     return response
+
 
 # -----------------------------------------------------------------------------
 # Dashboard
