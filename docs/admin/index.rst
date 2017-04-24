@@ -9,4 +9,3 @@ onboard your userbase to the Constellation Forms system.
    :caption: Contents:
 
    installation
-   
