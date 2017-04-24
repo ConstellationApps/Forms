@@ -10,10 +10,9 @@ core features include:
 * Form Lifecycles
 * Form Versions
 
-More advanced features such as form approval status are planned.  This
-will allow for advanced tracking of forms used for internal processes
-such as purchase approvals, access requests, and even appeals to
-normal form processes.
+Advanced features are also available such as form approval and commenting.
+These features can help support more advanced use cases where simply creating,
+distributing, filing, and reading submissions is not a sufficient workflow.
 
 This documentation is designed to be read by two distinct groups.  The
 primary group consuming this documentation are the developers of the
