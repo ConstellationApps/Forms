@@ -14,7 +14,9 @@ Welcome to Constellation Forms's documentation!
    :caption: Contents:
 
    dev/index
-      
+   admin/index
+   user/index
+
 Indices and tables
 ==================
 
