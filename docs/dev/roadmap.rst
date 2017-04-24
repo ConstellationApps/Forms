@@ -35,6 +35,9 @@ project include:
   * Completed forms can be exported
 
 
+Version 0.1.0 remains unreleased as an internal alpha version due to
+complications with the rest of the Constellation Suite.
+    
 Phase II - Milestone 0.2.0
 --------------------------
 
