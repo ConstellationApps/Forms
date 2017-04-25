@@ -40,6 +40,8 @@ import json
 
 
 class manage_create_form(View):
+    """Create and edit forms"""
+
     @method_decorator(login_required)
     def get(self, request, form_id=None):
         """ Returns a page that allows for the creation of new forms """
@@ -142,11 +144,13 @@ class manage_create_form(View):
 
 
 class view_form(View):
+    """Render blank forms and accept submissions"""
+
     @method_decorator(login_required)
     @method_decorator(permission_required('constellation_forms.form_visible',
                                           (Form, 'form_id', 'form_id')))
     def get(self, request, form_id):
-        ''' Returns a page that allows for the submittion of a created form '''
+        """ Returns a page that allows for the submittion of a created form """
         template_settings = GlobalTemplateSettings(allowBackground=False)
         template_settings = template_settings.settings_dict()
         form = Form.objects.filter(form_id=form_id).first()
@@ -160,7 +164,7 @@ class view_form(View):
         'constellation_forms.form_visible',
         (Form, 'form_id', 'form_id')))
     def post(self, request, form_id):
-        ''' Creates a form '''
+        """ Creates a form """
         form = Form.objects.filter(form_id=form_id).first()
         form_data = json.loads(request.POST['data'])['widgets']
         user = request.user
@@ -192,9 +196,11 @@ class view_form(View):
 
 
 class view_form_submission(View):
+    """View a form submission"""
+
     @method_decorator(login_required)
     def get(self, request, form_submission_id):
-        ''' Returns a page that displays a specific form submission instance'''
+        """ Returns a page that displays a specific form submission instance"""
         if not FormSubmission.can_view(request.user, form_submission_id):
             return redirect("%s?next=%s" % (
                 settings.LOGIN_URL, request.path))
@@ -228,6 +234,7 @@ class view_form_submission(View):
 
     @method_decorator(login_required)
     def post(self, request, form_submission_id):
+        """Accepts new logs for a given form"""
         submission = FormSubmission.objects.get(pk=form_submission_id)
         new_log = Log()
         new_log.message = request.POST["message"]
@@ -246,7 +253,7 @@ class view_form_submission(View):
 
 @login_required
 def list_forms(request):
-    ''' Returns a page that includes a list of available forms '''
+    """ Returns a page that includes a list of available forms """
     template_settings = GlobalTemplateSettings(allowBackground=False)
     template_settings = template_settings.settings_dict()
     forms = Form.objects.all().distinct("form_id")
@@ -280,7 +287,7 @@ def list_forms(request):
 
 @login_required
 def list_submissions(request):
-    ''' Returns a page that includes a list of submitted forms '''
+    """ Returns a page that includes a list of submitted forms """
     template_settings = GlobalTemplateSettings(allowBackground=False)
     template_settings = template_settings.settings_dict()
     submissions = FormSubmission.objects.all()
@@ -350,6 +357,8 @@ def list_submissions(request):
 
 @login_required
 def view_log_file(request, log_id):
+    """Return log attachments if the user is authorized"""
+
     if not Log.objects.filter(pk=log_id).exists():
         raise Http404("File not found")
     log_entry = Log.objects.get(pk=log_id)
@@ -370,6 +379,8 @@ def view_log_file(request, log_id):
 
 @login_required
 def approve_submission(request, form_submission_id):
+    """Approve a form submission"""
+
     with transaction.atomic():
         if not FormSubmission.can_approve(request.user, form_submission_id):
             return HttpResponseForbidden()
@@ -391,6 +402,8 @@ def approve_submission(request, form_submission_id):
 
 @login_required
 def deny_submission(request, form_submission_id):
+    """Disapprove a form submission"""
+
     with transaction.atomic():
         if not FormSubmission.can_approve(request.user, form_submission_id):
             return HttpResponseForbidden()
@@ -413,7 +426,7 @@ def deny_submission(request, form_submission_id):
 @csrf_exempt
 @api_key_required()
 def api_export(request, form_id):
-    ''' Returns a serialized set of submissions for the form '''
+    """ Returns a serialized set of submissions for the form """
     forms = Form.objects.filter(form_id=form_id)
     if "query" in request.GET:
         params = request.GET["query"]
@@ -453,6 +466,6 @@ def api_export(request, form_id):
 
 @login_required
 def view_dashboard(request):
-    '''Return a card that will appear on the main dashboard'''
+    """Return a card that will appear on the main dashboard"""
 
     return render(request, 'constellation_forms/dashboard.html')
