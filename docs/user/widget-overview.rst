@@ -3,7 +3,23 @@ Widget Overview
 
 This page includes an overview of all widgets.  Widgets are individual
 elements that can be added into a form.  Some widgets are configurable
-and have options.
+and have options.  This page walks through each widget as it would
+appear on a form.  In fact this page was built by generating a form
+with all possible widgets on it and then clipping them out for closer
+inspection.
+
+
+Form Header
+-----------
+
+.. image:: img/widget_header.png
+   :scale: 75%
+   :align: center
+
+Though not technically a widget, the form header is automatically
+added to every form.  This header includes in large print the title
+and description for the form.  These values should be kept relatively
+short in order to keep the form header clean and easy to read.
 
 
 Static Instructions
@@ -41,7 +57,7 @@ Paragraph Field
 
 This paragraph field is useful for accepting large essays.  This field
 allows a user to input as much text as needed.  The box can be resized
-if needed to accomodate more text as a user types in text.  On printed
+if needed to accommodate more text as a user types in text.  On printed
 forms, this renders as a box with a note to staple additional sheets
 if needed.
 
@@ -73,7 +89,7 @@ dates directly in the format :code:`MM/DD/YYYY`.
    :scale: 75%
    :align: center
 
-The datepicker provides an intuitive interface for users to select a
+The date-picker provides an intuitive interface for users to select a
 date without manually typing one in.
 
 
@@ -101,7 +117,7 @@ horizontal bar with a drag handle which can be dragged across.
 Multi Field
 -----------
 
-The multi field has multiple modes, the default mode uses checkboxes.
+The multi field has multiple modes, the default mode uses check-boxes.
 
 .. image:: img/widget_multi_checkbox.png
    :scale: 75%
@@ -136,7 +152,7 @@ Signature Field
    :scale: 75%
    :align: center
 
-The signature field includes a box for a user to type thier name or
+The signature field includes a box for a user to type their name or
 signature, and a box which when clicked satisfies the conditions in
 the United States for a signature.  Before using this system for cases
 where a signature needs to be legally binding, you should consult with
