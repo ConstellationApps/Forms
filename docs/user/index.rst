@@ -11,5 +11,5 @@ design features and are thus not discussed in this manual.
    :caption: Contents:
 
    creating-forms
+   widget-overview
    editing-forms
-   
