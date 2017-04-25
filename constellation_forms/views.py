@@ -390,9 +390,7 @@ def approve_submission(request, form_submission_id):
         new_log.owner = request.user
         new_log.submission = submission
         new_log.private = False
-        new_log.message = "Submission Approved by {0} {1}"\
-                          .format(request.user.first_name,
-                                  request.user.last_name)
+        new_log.message = "Submission Approved"
         new_log.mtype = 3
         new_log.save()
         submission.save()
@@ -413,9 +411,7 @@ def deny_submission(request, form_submission_id):
         new_log.owner = request.user
         new_log.submission = submission
         new_log.private = False
-        new_log.message = "Submission Disapproved by {0} {1}"\
-                          .format(request.user.first_name,
-                                  request.user.last_name)
+        new_log.message = "Submission Denied"
         new_log.mtype = 3
         new_log.save()
         submission.save()
