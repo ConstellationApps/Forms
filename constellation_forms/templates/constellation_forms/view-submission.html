@@ -52,7 +52,7 @@
                 {% load humanize %}
                 <div class="log-card">
                     <h2>History</h2>
-                    <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect visible-toggle-button" for="visibility-toggle">
+                    <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect visible-toggle-button screen-only" for="visibility-toggle">
                         <input type="checkbox" id="visibility-toggle" class="mdl-icon-toggle__input">
                         <i class="mdl-icon-toggle__label material-icons">visibility_off</i>
                     </label>
@@ -61,7 +61,7 @@
                         {% if not entry.private or can_approve %}
                         <li class="mdl-list__item mdl-list__item--three-line log-entry{% if entry.private %} log-private{% endif %}">
                             <span class="mdl-list__item-primary-content">
-                                <i class="material-icons mdl-list__item-avatar">
+                                <i class="material-icons mdl-list__item-avatar screen-only">
                                     {% if entry.mtype == 1 %}
                                     short_text
                                     {% elif entry.mtype == 2 %}
@@ -72,14 +72,15 @@
                                     attach_file
                                     {% endif %}
                                 </i>
-                                <span>{{ entry.owner.username }}</span>
+                                <span class="print-only">[ {{ entry.timestamp }} ]</span>
+                                <span>{{ entry.owner.username }}</span><span class="print-only"> | </span>
                                 <span class="mdl-list__item-text-body">{{ entry.message }}</span>
-                                <span class="mdl-list__item-text-body">
+                                <span class="mdl-list__item-text-body screen-only">
                                     <span title="{{ entry.timestamp }}" class="log-timestamp">{{ entry.timestamp|naturaltime }}</span>
                                 </span>
                             </span>
                             {% if can_approve %}
-                            <span class="mdl-list__item-secondary-content"><i class="material-icons">
+                            <span class="mdl-list__item-secondary-content screen-only"><i class="material-icons">
                                     {% if entry.private %}lock{% else %}visibility{% endif %}
                             </i></span>
                             {% endif %}
@@ -89,9 +90,9 @@
                         No Comments
                         {% endfor %}
                     </ul>
-                    <hr/>
-                    <h4>New Comment</h4>
-                    <form action="#" method="post" class="mdl-grid">
+                    <hr class="screen-only" />
+                    <h4 class="screen-only">New Comment</h4>
+                    <form action="#" method="post" class="mdl-grid screen-only">
                         {% csrf_token %}
                         <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col">
                             <textarea class="mdl-textfield__input" type="text" rows= "3" id="message" name="message"></textarea>

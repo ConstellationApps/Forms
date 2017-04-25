@@ -3,6 +3,10 @@ h1, h2, h3, h4, h5 {
     padding: 0;
 }
 
+li {
+    list-style: none;
+}
+
 input[type=text] {
     border: 0;
     border-bottom: 1px solid #000000;
@@ -133,4 +137,14 @@ textarea {
 .star-holder.is-checked ~ .star-holder.is-checked .mdl-radio__outer-circle::before {
     content: "\2605";
     color: rgb(63,81,255);
+}
+
+.log-card {
+    border-top: 3px solid #000000;
+    margin-top: 1em;
+    padding-top: 1em;
+}
+
+.log-private {
+    color: red;
 }
