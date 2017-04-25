@@ -154,7 +154,9 @@ Signature Field
 
 The signature field includes a box for a user to type their name or
 signature, and a box which when clicked satisfies the conditions in
-the United States for a signature.  Before using this system for cases
-where a signature needs to be legally binding, you should consult with
-legal council and determine if this is sufficient for your region and
-local laws.
+the United States for a signature.
+
+.. warning:: Before using this system for cases where a signature
+             needs to be legally binding, you should consult with
+             legal council and determine if this is sufficient for
+             your region and local laws.
