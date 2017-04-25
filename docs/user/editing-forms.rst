@@ -15,6 +15,16 @@ the form.  Users that had started a form under the old version will
 continue to be able to fill out that version, and new users will only
 see the new form.
 
+.. image:: img/edit_form.png
+   :scale: 75%
+   :align: center
+
+.. note:: If you are running an older version of the Constellation
+          Forms software, the 'Update Form' button may say 'Create
+          Form'.  Rest assured that in all versions of the software,
+          the form will be updated, rather than a new version being
+          created.
+           
 .. note:: If it is necessary to completely change all the fields on a
           form, consider archiving the old form and creating a new
           form from scratch.
