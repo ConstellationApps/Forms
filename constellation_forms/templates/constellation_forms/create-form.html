@@ -48,7 +48,11 @@
         <div id="widgets-holder">
         </div>
         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent form-submit" onclick="submitForm()">
+            {% if form %}
+            Update Form
+            {% else %}
             Create Form
+            {% endif %}
         </button>
     </div>
     <div id="right-sidebar" class="mdl-cell mdl-cell--3-col">
