@@ -31,6 +31,10 @@ urlpatterns = [
         views.approve_submission,
         name="view_approve_submission"),
 
+    url(r'^view/submission/(?P<form_submission_id>\d+)/provisional$',
+        views.provisional_approve,
+        name="view_provisional_submission"),
+
     url(r'^view/submission/(?P<form_submission_id>\d+)/deny$',
         views.deny_submission,
         name="view_deny_submission"),

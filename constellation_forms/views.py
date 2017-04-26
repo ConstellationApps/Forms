@@ -382,6 +382,25 @@ def view_log_file(request, log_id):
 
 
 @login_required
+def provisional_approve(request, form_submission_id):
+    """Approve a form submission"""
+
+    with transaction.atomic():
+        if not FormSubmission.can_approve(request.user, form_submission_id):
+            return HttpResponseForbidden()
+        submission = FormSubmission.objects.get(pk=form_submission_id)
+        new_log = Log()
+        new_log.owner = request.user
+        new_log.submission = submission
+        new_log.private = False
+        new_log.message = "Provisionally Approved"
+        new_log.mtype = 3
+        new_log.save()
+    return HttpResponseRedirect(
+        reverse('constellation_forms:view_list_submissions'))
+
+
+@login_required
 def approve_submission(request, form_submission_id):
     """Approve a form submission"""
 

@@ -30,6 +30,17 @@
                         <i class="material-icons">check</i>
                     </button>
                 </a>
+                <a href="{% url 'constellation_forms:view_provisional_submission' id %}">
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--green-300 mdl-color-text--white form_menu_deny">
+                        <i class="material-icons">alarm_on</i>
+                    </button>
+                </a>
+                <a href="#">
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--grey mdl-color-text--white form_menu_deny">
+                        <i class="material-icons">call_missed_outgoing</i>
+                    </button>
+                </a>
+
                 <a href="{% url 'constellation_forms:view_deny_submission' id %}">
                     <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--red-A700 mdl-color-text--white form_menu_deny">
                         <i class="material-icons">block</i>
@@ -67,7 +78,9 @@
                                     {% elif entry.mtype == 2 %}
                                     account_circle
                                     {% elif entry.mtype == 3 %}
-                                    {% if "Approved" in entry.message %}
+                                    {% if "Provisionally" in entry.message %}
+                                    alarm_on
+                                    {% elif "Approved" in entry.message %}
                                     thumb_up
                                     {% elif "Denied" in entry.message %}
                                     thumb_down
