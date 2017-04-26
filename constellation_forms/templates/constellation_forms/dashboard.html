@@ -15,11 +15,13 @@
                 <a href="{% url 'constellation_forms:view_list_submissions' %}">View Submitted Forms</a>
             </span>
         </li>
+        {% if perms.constellation_forms.add_form %}
         <li class="mdl-list__item">
             <span class="mdl-list__item-primary-content">
                 <i class="material-icons mdl-list__item-icon">create</i>
                 <a href="{% url 'constellation_forms:manage_create_form' %}">Create New Form</a>
             </span>
         </li>
+        {% endif %}
     </ul>
 </div>
