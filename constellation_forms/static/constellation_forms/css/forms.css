@@ -298,3 +298,11 @@ select:-moz-focusring {
     right: 0;
     top: 10px;
 }
+
+
+.mdl-list__item-avatar, .mdl-list__item-avatar.material-icons {
+    box-sizing: unset;
+    background: unset;
+    border-radius: unset;
+    color: rgba(0,0,0,.54);
+}
