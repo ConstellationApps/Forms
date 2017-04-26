@@ -67,7 +67,13 @@
                                     {% elif entry.mtype == 2 %}
                                     account_circle
                                     {% elif entry.mtype == 3 %}
-                                    thumbs_up_down
+                                    {% if "Approved" in entry.message %}
+                                    thumb_up
+                                    {% elif "Denied" in entry.message %}
+                                    thumb_down
+                                    {% else %}
+                                    warning
+                                    {% endif %}
                                     {% elif entry.mtype == 4 %}
                                     attach_file
                                     {% endif %}
