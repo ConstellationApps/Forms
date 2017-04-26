@@ -40,10 +40,12 @@
           {% endfor %}
         </ul>
       </div>
+      {% if show_username_filter %}
       <div class="pad_right mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
         <input class="mdl-textfield__input" type="text" id="search_username" name="username">
         <label class="mdl-textfield__label" for="search_username">Username</label>
       </div>
+      {% endif %}
       <button type="button" class="query_button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab">
         <i class="material-icons">filter_list</i>
       </button>

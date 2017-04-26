@@ -351,11 +351,20 @@ def list_submissions(request):
         if (request.user.has_perm("constellation_forms.form_owned_by", f.form)
             or request.user == f.owner) and (f.state == 2 or f.state == 3)]
 
+    num_users = len(set([f["owner"] for f in forms[1]["list_items"]]) |
+                    set([f["owner"] for f in forms[2]["list_items"]]))
+
+    if num_users > 1:
+        num_users = True
+    else:
+        num_users = False
+
     return render(request, 'constellation_forms/list.html', {
         'template_settings': template_settings,
         'list_type': 'Form Submissions',
         'lists': forms,
         'forms': Form.objects.all().distinct('form_id'),
+        'show_username_filter': num_users,
     })
 
 
