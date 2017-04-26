@@ -236,6 +236,11 @@ class view_form_submission(View):
     def post(self, request, form_submission_id):
         """Accepts new logs for a given form"""
         submission = FormSubmission.objects.get(pk=form_submission_id)
+        redirect = reverse('constellation_forms:view_form_submission',
+                           args=[form_submission_id])
+        if ("message" not in request.POST or
+                len(request.POST["message"].strip()) == 0):
+            return HttpResponseRedirect(redirect)
         new_log = Log()
         new_log.message = request.POST["message"]
         if "private" not in request.POST or request.POST["private"] == "off":
@@ -247,8 +252,7 @@ class view_form_submission(View):
         new_log.clean()
         new_log.save()
 
-        return HttpResponseRedirect(reverse('constellation_forms:view_form_submission', # noqa 401 (can't split a string easily here...)
-                                    args=[form_submission_id]))
+        return HttpResponseRedirect(redirect)
 
 
 @login_required
