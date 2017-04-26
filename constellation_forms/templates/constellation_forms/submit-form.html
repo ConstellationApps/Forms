@@ -32,7 +32,7 @@
         <div class="mdl-card__supporting-text">
             <div id="widgets-holder">
                 {% for widget in form.elements %}
-                <form id="form-{{ forloop.counter }}" name="form-{{ forloop.counter }}" class="form-widget">
+                <form id="form-{{ forloop.counter }}" name="form-{{ forloop.counter }}" class="form-widget"{% if widget.type == "slider" %} oninput="result.value=parseInt(value.value)"{% endif %}>
                     {% with "constellation_forms/widgets/"|add:widget.type|add:".html" as template %}
                     {% include template with widget=widget id=forloop.counter %}
                     {% endwith %}

@@ -1,6 +1,6 @@
 /* exported submitForm */
 
-var message = document.querySelector('#message-toast');
+const message = document.querySelector('#message-toast');
 
 $(function() {
   setupValidation();
@@ -10,7 +10,19 @@ $(function() {
       $(this)[0].parentElement.MaterialTextfield.checkDirty();
     },
   });
+  $('.slider-widget').each(function() {
+    updateSliderTooltip($(this));
+  });
 });
+
+/**
+ * Updates the tooltip of a slider with its value
+ * @param {Object} container - The element containing the slider
+ */
+function updateSliderTooltip(container) {
+  let value = container.find('.mdl-slider').val();
+  container.find('.mdl-tooltip output').html(value);
+}
 
 /**
  * Run handlers to make forms check validation only after
