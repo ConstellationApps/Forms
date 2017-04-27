@@ -62,8 +62,7 @@ function validate(elem) {
  */
 function getWidgetValue(widget) {
   let inputs = widget.find('input');
-  console.log(widget);
-  if(inputs.length == 1 || (inputs.length == 0 && widget.find('textarea').length > 0)) {
+  if(inputs.length == 1 || (inputs.length == 0 && widget.find('textarea').length > 0) || (inputs.length == 2 && widget.find('input').length > 0)) {
     return widget.serializeArray()[0]['value'];
   } else {
     let returnArray = [];
