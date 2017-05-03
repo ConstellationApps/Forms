@@ -15,6 +15,7 @@ from django.http import (
 )
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.utils.text import slugify
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
@@ -528,13 +529,15 @@ def api_export(request, form_id):
     """ Returns a serialized set of submissions for the form """
     forms = Form.objects.filter(form_id=form_id)
     if "query" in request.GET:
-        params = request.GET["query"]
+        params = request.GET.getlist("query")
     else:
-        first_form_elements = forms.first().elements
+        first_form_elements = forms.last().elements
         if "slug" in first_form_elements[0]:
             params = [f['slug'] for f in first_form_elements]
         else:
-            params = [f['title'] for f in first_form_elements]
+            params = [slugify(f['title']) for f in first_form_elements
+                      if "title" in f and f['type'] != 'instructions']
+        params = ["_date", "_uid", "_fname", "_lname"] + params
 
     response = HttpResponse(content_type='text')
 
@@ -545,13 +548,24 @@ def api_export(request, form_id):
         for index, element in enumerate(form.elements):
             if "slug" in element and element['slug'] in params:
                 slug_indexes[params.index(element['slug'])] = index
-            elif "title" in element and element['title'] in params:
-                slug_indexes[params.index(element['title'])] = index
+            elif "title" in element and slugify(element['title']) in params:
+                slug_indexes[params.index(slugify(element['title']))] = index
         for submission in FormSubmission.objects.filter(form=form):
             line = []
-            for index in slug_indexes:
+            for i, index in enumerate(slug_indexes):
                 if index == -1:
-                    line.append("")
+                    if params[i] == "_uid":
+                        line.append(submission.owner.username)
+                    elif params[i] == "_upk":
+                        line.append(submission.owner.pk)
+                    elif params[i] == "_fname":
+                        line.append(submission.owner.first_name)
+                    elif params[i] == "_lname":
+                        line.append(submission.owner.last_name)
+                    elif params[i] == "_date":
+                        line.append(submission.modified)
+                    else:
+                        line.append("")
                 else:
                     line.append(submission.submission[index])
             writer.writerow(line)
