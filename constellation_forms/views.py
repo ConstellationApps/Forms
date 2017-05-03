@@ -37,6 +37,7 @@ from .models import (
 from .util import api_key_required
 
 import csv
+import datetime
 import json
 import time
 
@@ -539,6 +540,20 @@ def api_export(request, form_id):
                       if "title" in f and f['type'] != 'instructions']
         params = ["_date", "_uid", "_fname", "_lname"] + params
 
+    query_dict = {}
+    if "after" in request.GET:
+        after_date = datetime.datetime.strptime(request.GET["after"],
+                                                '%Y-%m-%d')
+        query_dict["modified__gte"] = after_date
+    if "before" in request.GET:
+        before_date = datetime.datetime.strptime(request.GET["before"],
+                                                 '%Y-%m-%d')
+        query_dict["modified__lte"] = before_date
+    if "pk" in request.GET:
+        query_dict["pk"] = request.GET['pk']
+    if "since_pk" in request.GET:
+        query_dict["pk__gt"] = request.GET['since_pk']
+
     response = HttpResponse(content_type='text')
 
     writer = csv.writer(response)
@@ -550,7 +565,8 @@ def api_export(request, form_id):
                 slug_indexes[params.index(element['slug'])] = index
             elif "title" in element and slugify(element['title']) in params:
                 slug_indexes[params.index(slugify(element['title']))] = index
-        for submission in FormSubmission.objects.filter(form=form):
+        for submission in FormSubmission.objects.filter(form=form,
+                                                        **query_dict):
             line = []
             for i, index in enumerate(slug_indexes):
                 if index == -1:
