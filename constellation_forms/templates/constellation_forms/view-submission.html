@@ -93,7 +93,12 @@
                                 </i>
                                 <span class="print-only">[ {{ entry.timestamp }} ]</span>
                                 <span>{{ entry.owner.username }}</span><span class="print-only"> | </span>
-                                <span class="mdl-list__item-text-body">{{ entry.message }}</span>
+                                <span class="mdl-list__item-text-body">{{ entry.message }}
+                                    {% if entry.file %}
+                                    {% if entry.message %}<br/>{% endif %}
+                                    <a href="{% url 'constellation_forms:view_log_file' entry.id %}">View File</a>
+                                    {% endif %}
+                                </span>
                                 <span class="mdl-list__item-text-body screen-only">
                                     <span title="{{ entry.timestamp }}" class="log-timestamp">{{ entry.timestamp|naturaltime }}</span>
                                 </span>
@@ -111,12 +116,13 @@
                     </ul>
                     <hr class="screen-only" />
                     <h4 class="screen-only">New Comment</h4>
-                    <form action="#" method="post" class="mdl-grid screen-only">
+                    <form action="#" method="post" class="mdl-grid screen-only" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col">
                             <textarea class="mdl-textfield__input" type="text" rows= "3" id="message" name="message"></textarea>
                             <label class="mdl-textfield__label" for="message">Message...</label>
                         </div>
+                        <input type="file" name="file">
                         {% if can_approve %}
                         <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-cell mdl-cell--6-col" for="log_private">
                             <input type="checkbox" id="log_private" class="mdl-checkbox__input" name="private">

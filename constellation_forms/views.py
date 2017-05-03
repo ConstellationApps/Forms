@@ -37,6 +37,7 @@ from .util import api_key_required
 
 import csv
 import json
+import time
 
 
 class manage_create_form(View):
@@ -238,11 +239,23 @@ class view_form_submission(View):
         submission = FormSubmission.objects.get(pk=form_submission_id)
         redirect = reverse('constellation_forms:view_form_submission',
                            args=[form_submission_id])
-        if ("message" not in request.POST or
-                len(request.POST["message"].strip()) == 0):
+
+        if (("message" not in request.POST or
+                len(request.POST["message"].strip()) == 0) and
+                "file" not in request.FILES):
             return HttpResponseRedirect(redirect)
         new_log = Log()
         new_log.message = request.POST["message"]
+        if "file" in request.FILES:
+            filename = (form_submission_id + "-" + str(int(time.time())) + "-"
+                        + request.FILES["file"].name)
+            new_log.mtype = 4
+            with open(settings.MEDIA_ROOT + filename,
+                      'wb+') as destination:
+                new_log.file = filename
+                for chunk in request.FILES["file"].chunks():
+                    destination.write(chunk)
+
         if "private" not in request.POST or request.POST["private"] == "off":
             new_log.private = False
         else:
