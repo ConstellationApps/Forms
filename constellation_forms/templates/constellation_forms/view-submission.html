@@ -25,27 +25,38 @@
             <span class="form-description"><h4>{{ description }}</h4></span>
             {% if can_approve %}
             <div class="mdl-card__menu form_menu">
-                <a href="{% url 'constellation_forms:view_approve_submission' id %}">
+                <a href="{% url 'constellation_forms:view_approve_submission' id %}" id="approve-button">
                     <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--green mdl-color-text--white form_menu_approve">
                         <i class="material-icons">check</i>
                     </button>
                 </a>
-                <a href="{% url 'constellation_forms:view_provisional_submission' id %}">
+                <div class="mdl-tooltip mdl-tooltip--large" for="approve-button">
+                    Approve
+                </div>
+                <a href="{% url 'constellation_forms:view_provisional_submission' id %}" id="provisional-button">
                     <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--green-300 mdl-color-text--white form_menu_deny">
                         <i class="material-icons">alarm_on</i>
                     </button>
                 </a>
-                <a href="#">
+                <div class="mdl-tooltip mdl-tooltip--large" for="provisional-button">
+                    Provisionally Approve
+                </div>
+                <a href="#" id="changes-button">
                     <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--grey mdl-color-text--white form_menu_deny">
                         <i class="material-icons">call_missed_outgoing</i>
                     </button>
                 </a>
-
-                <a href="{% url 'constellation_forms:view_deny_submission' id %}">
+                <div class="mdl-tooltip mdl-tooltip--large" for="changes-button">
+                    Request Changes
+                </div>
+                <a href="{% url 'constellation_forms:view_deny_submission' id %}" id="deny-button">
                     <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--red-A700 mdl-color-text--white form_menu_deny">
                         <i class="material-icons">block</i>
                     </button>
                 </a>
+                <div class="mdl-tooltip mdl-tooltip--large" for="deny-button">
+                    Deny
+                </div>
             </div>
             {% endif %}
         </div>
