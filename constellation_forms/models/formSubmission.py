@@ -73,10 +73,6 @@ class FormSubmission(models.Model):
             if ("required" in element and element["required"]) and (
                     sub_element is None and self.state > 0):
                 raise ValidationError("Required element blank.")
-            if "validator" in element and sub_element is not None:
-                regex = re.compile(element["validator"])
-                if not regex.match(sub_element):
-                    raise ValidationError("Validator did not match entry.")
             if "choices" in element and sub_element:
                 if ("other_choice" not in element or
                         not element["other_choice"]):
