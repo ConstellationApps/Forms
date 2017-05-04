@@ -77,8 +77,16 @@ Form Status
    :scale: 75%
    :align: center
 
-The final component of the form review interface are the red and green
-buttons at the top right of the review interface.  These buttons will
-set the form's status to approved or disapproved.  Once set, the form
-will no longer have the 'pending' icon next to it and it will instead
-have a thumbs-up or a thumbs-down icon to denote its status.
+The final component of the review interface are the buttons in the
+upper right hand corner.  These buttons set various statuses for the
+form.  The green check mark approves the form, this is a final status
+that will be communicated back to the user.  The green alarm clock
+means 'tentative approval', this status does not change the ultimate
+status of the form, but it will write an entry to the log showing that
+on a particular date and time, the form received provisional approval.
+The gray bent arrow will 'bounce' the form back to the user that
+submitted it, allowing them to make changes.  This button is best used
+with comments in the log that make clear the changes that are being
+requested.  The final button is the red crossed circle which will mark
+the form as denied.  Denied is a final status that will be
+communicated back to the user that submitted the form.
