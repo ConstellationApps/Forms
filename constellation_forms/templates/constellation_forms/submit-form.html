@@ -29,6 +29,10 @@
             <h2>{{ form.name }}</h2>
             <span class="form-description"><h4>{{ form.description }}</h4></span>
         </div>
+        <div class="print-only">
+            Name:
+            <hr />
+        </div>
         <div class="mdl-card__supporting-text">
             <div id="widgets-holder">
                 {% for widget in form.elements %}
