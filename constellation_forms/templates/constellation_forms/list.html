@@ -57,15 +57,42 @@
   <div class="mdl-card__title">
     <h2 class="mdl-card__title-text">{{ list_type }}</h2>
   </div>
-  {% if list_type == 'Forms' and perms.constellation_forms.add_form %}
+  {% if list_type == 'Forms' %}
   <div class="mdl-card__menu">
-    <a href="{% url 'constellation_forms:manage_create_form' %}">
+    {% if archived %}
+    <a href="{% url 'constellation_forms:view_list_archived_forms' %}" id="view-archive">
+      <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+        <i class="material-icons">archive</i>
+      </button>
+    </a>
+    <div class="mdl-tooltip" data-mdl-for="view-archive">
+      View Archived Forms
+    </div>
+    {% endif %}
+    {% if perms.constellation_forms.add_form %}
+    <a href="{% url 'constellation_forms:manage_create_form' %}" id="add-new">
       <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
         <i class="material-icons">add</i>
       </button>
     </a>
+    <div class="mdl-tooltip" data-mdl-for="add-new">
+      Create New Form
+    </div>
+    {% endif %}
+  </div>
+  {% elif list_type == 'Archived Forms' %}
+  <div class="mdl-card__menu">
+    <a href="{% url 'constellation_forms:view_list_forms' %}" id="view-list">
+      <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+        <i class="material-icons">unarchive</i>
+      </button>
+    </a>
+    <div class="mdl-tooltip" data-mdl-for="view-list">
+      View Active Forms
+    </div>
   </div>
   {% endif %}
+
   <div class="mdl-card__supporting-text">
     {% for list in lists %}
     {% if list.list_items %}
@@ -91,6 +118,11 @@
           {{ item.description }}
           {% if item.edit %}
           <a href="{{ item.edit }}"><i class="material-icons">edit</i></a>
+            {% if list_type == 'Archived Forms' %}
+            <a href="{% url 'constellation_forms:view_unarchive_form' item.id %}"><i class="material-icons">unarchive</i></a>
+            {% else %}
+            <a href="{% url 'constellation_forms:view_archive_form' item.id %}"><i class="material-icons">archive</i></a>
+            {% endif %}
           {% endif %}
         </span>
       </div>

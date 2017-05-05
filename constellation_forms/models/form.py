@@ -76,6 +76,7 @@ class Form(models.Model):
     name = models.TextField()
     description = models.TextField(blank=True)
     elements = JSONField()
+    archived = models.BooleanField(default=False)
 
     @classmethod
     def can_edit(cls, user, form_id):

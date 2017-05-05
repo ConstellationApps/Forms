@@ -269,28 +269,59 @@ class view_form_submission(View):
 
 
 @login_required
+def archive_form(request, form_id):
+    """Archive a form"""
+    if not Form.can_edit(request.user, form_id):
+        return redirect("%s?next=%s" % (
+            settings.LOGIN_URL, request.path))
+    form = Form.objects.filter(form_id=form_id).first()
+    form.archived = True
+    form.save()
+    return HttpResponseRedirect(
+        reverse('constellation_forms:view_list_forms'))
+
+
+@login_required
+def unarchive_form(request, form_id):
+    """Unarchive a form"""
+    if not Form.can_edit(request.user, form_id):
+        return redirect("%s?next=%s" % (
+            settings.LOGIN_URL, request.path))
+    form = Form.objects.filter(form_id=form_id).first()
+    form.archived = False
+    form.save()
+    return HttpResponseRedirect(
+        reverse('constellation_forms:view_list_archived_forms'))
+
+
+@login_required
 def list_forms(request):
     """ Returns a page that includes a list of available forms """
     template_settings = GlobalTemplateSettings(allowBackground=False)
     template_settings = template_settings.settings_dict()
     forms = Form.objects.all().distinct("form_id")
     owned_forms = [{
-        "pk": f.pk,
+        "id": f.form_id,
         "name": f.name,
         "description": f.description,
         "url": reverse('constellation_forms:view_form', args=[f.form_id]),
         "edit": reverse('constellation_forms:manage_create_form',
                         args=[f.form_id])
     } for f in forms if
-        request.user.has_perm("constellation_forms.form_owned_by", f)]
+        request.user.has_perm("constellation_forms.form_owned_by", f) and not
+        f.archived]
 
     available_forms = [{
+        "id": f.form_id,
         "name": f.name,
         "description": f.description,
         "url": reverse('constellation_forms:view_form', args=[f.form_id]),
     } for f in forms if
         request.user.has_perm("constellation_forms.form_visible", f) and
-        f.pk not in [a['pk'] for a in owned_forms]]
+        f.id not in [a['id'] for a in owned_forms] and not f.archived]
+
+    archived = any(request.user.has_perm("constellation_forms.form_owned_by",
+                                         f) and f.archived for f in forms)
 
     forms = [{"name": "Owned Forms", "list_items": owned_forms},
              {"name": "Available Forms", "list_items": available_forms}]
@@ -298,6 +329,33 @@ def list_forms(request):
     return render(request, 'constellation_forms/list.html', {
         'template_settings': template_settings,
         'list_type': 'Forms',
+        'archived': archived,
+        'lists': forms,
+    })
+
+
+@login_required
+def archived_forms(request):
+    """ Returns a page that includes a list of archived forms """
+    template_settings = GlobalTemplateSettings(allowBackground=False)
+    template_settings = template_settings.settings_dict()
+    forms = Form.objects.all().distinct("form_id")
+    forms = [{
+        "id": f.form_id,
+        "name": f.name,
+        "description": f.description,
+        "url": reverse('constellation_forms:view_form', args=[f.form_id]),
+        "edit": reverse('constellation_forms:manage_create_form',
+                        args=[f.form_id])
+    } for f in forms if
+        (request.user.has_perm("constellation_forms.form_owned_by", f)
+         and f.archived)]
+
+    forms = [{"name": "Archived Forms", "list_items": forms}]
+
+    return render(request, 'constellation_forms/list.html', {
+        'template_settings': template_settings,
+        'list_type': 'Archived Forms',
         'lists': forms,
     })
 

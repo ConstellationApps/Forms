@@ -17,6 +17,18 @@ urlpatterns = [
     url(r'^view/list-forms$', views.list_forms,
         name="view_list_forms"),
 
+    url(r'^view/list-archived-forms$', views.archived_forms,
+        name="view_list_archived_forms"),
+
+    url(r'^view/form/(?P<form_id>\d+)/archive$', views.archive_form,
+        name="view_archive_form"),
+
+    url(r'^view/form/(?P<form_id>\d+)/unarchive$', views.unarchive_form,
+        name="view_unarchive_form"),
+
+    url(r'^view/list-submissions$', views.list_submissions,
+        name="view_list_submissions"),
+
     url(r'^view/list-submissions$', views.list_submissions,
         name="view_list_submissions"),
 
