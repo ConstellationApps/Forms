@@ -416,7 +416,7 @@ def list_submissions(request):
                        args=[f.pk]),
         "edit": reverse('constellation_forms:view_form',
                         args=[f.form.form_id, f.pk])
-    } for f in submissions if request.user == f.owner and f.state == 1]
+    } for f in submissions if request.user == f.owner and f.state <= 2]
 
     forms[1]["list_items"] = [{
         "name": f.form.name,
@@ -428,7 +428,7 @@ def list_submissions(request):
                        args=[f.pk]),
     } for f in submissions
         if (request.user.has_perm("constellation_forms.form_owned_by", f.form)
-            and (f.state == 1))]
+            and (f.state <= 1))]
 
     forms[2]["list_items"] = [{
         "name": f.form.name,
@@ -440,7 +440,7 @@ def list_submissions(request):
                        args=[f.pk]),
     } for f in submissions
         if (request.user.has_perm("constellation_forms.form_owned_by", f.form)
-            or request.user == f.owner) and (f.state == 2 or f.state == 3)]
+            or request.user == f.owner) and (f.state > 2)]
 
     num_users = len(set([f["owner"] for f in forms[1]["list_items"]]) |
                     set([f["owner"] for f in forms[2]["list_items"]]))
@@ -508,7 +508,7 @@ def approve_submission(request, form_submission_id):
         if not FormSubmission.can_approve(request.user, form_submission_id):
             return HttpResponseForbidden()
         submission = FormSubmission.objects.get(pk=form_submission_id)
-        submission.state = 2
+        submission.state = 3
         new_log = Log()
         new_log.owner = request.user
         new_log.submission = submission
@@ -529,12 +529,33 @@ def deny_submission(request, form_submission_id):
         if not FormSubmission.can_approve(request.user, form_submission_id):
             return HttpResponseForbidden()
         submission = FormSubmission.objects.get(pk=form_submission_id)
-        submission.state = 3
+        submission.state = 4
         new_log = Log()
         new_log.owner = request.user
         new_log.submission = submission
         new_log.private = False
         new_log.message = "Submission Denied"
+        new_log.mtype = 3
+        new_log.save()
+        submission.save()
+    return HttpResponseRedirect(
+        reverse('constellation_forms:view_list_submissions'))
+
+
+@login_required
+def request_changes_submission(request, form_submission_id):
+    """Request changes on a form submission"""
+
+    with transaction.atomic():
+        if not FormSubmission.can_approve(request.user, form_submission_id):
+            return HttpResponseForbidden()
+        submission = FormSubmission.objects.get(pk=form_submission_id)
+        submission.state = 2
+        new_log = Log()
+        new_log.owner = request.user
+        new_log.submission = submission
+        new_log.private = False
+        new_log.message = "Changes Requested"
         new_log.mtype = 3
         new_log.save()
         submission.save()

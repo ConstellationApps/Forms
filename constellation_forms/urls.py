@@ -43,6 +43,10 @@ urlpatterns = [
         views.view_form_submission.as_view(),
         name="view_form_submission"),
 
+    url(r'^view/submission/(?P<form_submission_id>\d+)/request-changes$',
+        views.request_changes_submission,
+        name="view_request_changes_submission"),
+
     url(r'^view/submission/(?P<form_submission_id>\d+)/approve$',
         views.approve_submission,
         name="view_approve_submission"),

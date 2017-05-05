@@ -107,8 +107,10 @@
           {% elif item.state == 1 %}
           <i class="material-icons state-icon">mail_outline</i>
           {% elif item.state == 2 %}
-          <i class="material-icons state-icon">thumb_up</i>
+          <i class="material-icons state-icon">call_missed_outgoing</i>
           {% elif item.state == 3 %}
+          <i class="material-icons state-icon">thumb_up</i>
+          {% elif item.state == 4 %}
           <i class="material-icons state-icon">thumb_down</i>
           {% endif %}
           {% endif %}
@@ -118,11 +120,11 @@
           {{ item.description }}
           {% if item.edit %}
           <a href="{{ item.edit }}"><i class="material-icons">edit</i></a>
-            {% if list_type == 'Archived Forms' %}
-            <a href="{% url 'constellation_forms:view_unarchive_form' item.id %}"><i class="material-icons">unarchive</i></a>
-            {% elif list_type == 'Forms' %}
-            <a href="{% url 'constellation_forms:view_archive_form' item.id %}"><i class="material-icons">archive</i></a>
-            {% endif %}
+          {% if list_type == 'Archived Forms' %}
+          <a href="{% url 'constellation_forms:view_unarchive_form' item.id %}"><i class="material-icons">unarchive</i></a>
+          {% elif list_type == 'Forms' %}
+          <a href="{% url 'constellation_forms:view_archive_form' item.id %}"><i class="material-icons">archive</i></a>
+          {% endif %}
           {% endif %}
         </span>
       </div>

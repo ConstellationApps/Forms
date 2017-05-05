@@ -41,7 +41,7 @@
                 <div class="mdl-tooltip mdl-tooltip--large" for="provisional-button">
                     Provisionally Approve
                 </div>
-                <a href="#" id="changes-button">
+                <a href="{% url 'constellation_forms:view_request_changes_submission' id %}" id="changes-button">
                     <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--grey mdl-color-text--white">
                         <i class="material-icons">call_missed_outgoing</i>
                     </button>
@@ -57,7 +57,7 @@
                 <div class="mdl-tooltip mdl-tooltip--large" for="deny-button">
                     Deny
                 </div>
-                {% else %}
+                {% elif state <= 2 %}
                 <a href="{% url 'constellation_forms:view_form' form_id id %}" id="deny-button">
                     <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--red-A700 mdl-color-text--white">
                         <i class="material-icons">edit</i>
