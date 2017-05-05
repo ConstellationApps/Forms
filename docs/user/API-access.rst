@@ -18,7 +18,7 @@ To make a request to the API, send your API key as the
 .. code-block:: bash
 
    % curl https://127.0.0.1:8000/forms/api/export/1 --header \
-   "X-AUTHORIZATION:admin MySecureKey"
+   "X-AUTHORIZATION: username MySecureKey"
    id,Username
    0123456789,test
 
@@ -31,7 +31,22 @@ individual form fields.  The API endpoint takes the form of:
 
    https://<constellation_address>/forms/api/export/<form_id>
 
-In the previous example, :code:`MySecureKey` is the API key which
-belongs to the :code:`admin` user.
+Queries
+-------
+To query specific columns of a form, use the :code:`query`, :code:`before`, and
+:code:`after` GET parameters. For example:
 
-.. note:: It is not necessary to use curl to query the API.
+.. code-block:: bash
+
+    https://<constellation_address>/forms/api/export/<form_id>?query=
+        <col1>&query=<col2>&before=<year>-<month>-<day>&after=<year>-<month>-<day>
+
+In addition, the following columns are available for every form:
+ * :code:`_uid` - The username of the submitter
+ * :code:`_date` - The date the form was submitted
+ * :code:`_fname` - The first name of the submitter
+ * :code:`_lname` - The last name of the submitter
+ * :code:`_upk` - The primary key for the user (guaranteed unique)
+
+
+In the previous examples, :code:`MySecureKey` is the API key.
