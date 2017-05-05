@@ -33,13 +33,15 @@ individual form fields.  The API endpoint takes the form of:
 
 Queries
 -------
-To query specific columns of a form, use the :code:`query`, :code:`before`, and
-:code:`after` GET parameters. For example:
+To query specific columns of a form, use the :code:`query`, :code:`state`,
+:code:`before`, :code:`after`, and :code:`since_pk` GET parameters.
+For example:
 
 .. code-block:: bash
 
     https://<constellation_address>/forms/api/export/<form_id>?query=
         <col1>&query=<col2>&before=<year>-<month>-<day>&after=<year>-<month>-<day>
+        &state=1
 
 In addition, the following columns are available for every form:
  * :code:`_uid` - The username of the submitter

@@ -553,6 +553,8 @@ def api_export(request, form_id):
         query_dict["pk"] = request.GET['pk']
     if "since_pk" in request.GET:
         query_dict["pk__gt"] = request.GET['since_pk']
+    if "state" in request.GET:
+        query_dict["state"] = request.GET['state']
 
     response = HttpResponse(content_type='text')
 
