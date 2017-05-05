@@ -23,8 +23,8 @@
         <div class="mdl-card__title form-title mdl-shadow--3dp">
             <h2>{{ name }}</h2>
             <span class="form-description"><h4>{{ description }}</h4></span>
-            {% if can_approve %}
             <div class="mdl-card__menu form_menu">
+                {% if can_approve %}
                 <a href="{% url 'constellation_forms:view_approve_submission' id %}" id="approve-button">
                     <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--green mdl-color-text--white form_menu_approve">
                         <i class="material-icons">check</i>
@@ -42,7 +42,7 @@
                     Provisionally Approve
                 </div>
                 <a href="#" id="changes-button">
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--grey mdl-color-text--white form_menu_deny">
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--grey mdl-color-text--white">
                         <i class="material-icons">call_missed_outgoing</i>
                     </button>
                 </a>
@@ -50,15 +50,21 @@
                     Request Changes
                 </div>
                 <a href="{% url 'constellation_forms:view_deny_submission' id %}" id="deny-button">
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--red-A700 mdl-color-text--white form_menu_deny">
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--red-A700 mdl-color-text--white">
                         <i class="material-icons">block</i>
                     </button>
                 </a>
                 <div class="mdl-tooltip mdl-tooltip--large" for="deny-button">
                     Deny
                 </div>
+                {% else %}
+                <a href="{% url 'constellation_forms:view_form' form_id id %}" id="deny-button">
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-color--red-A700 mdl-color-text--white">
+                        <i class="material-icons">edit</i>
+                    </button>
+                </a>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
         <div class="submission-holder mdl-card__supporting-text mdl-grid">
             <div id="widgets-holder" class="mdl-cell mdl-cell--7-col widgets-holder">

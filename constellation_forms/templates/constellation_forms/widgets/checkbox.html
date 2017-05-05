@@ -5,7 +5,7 @@
     {% for choice in widget.choices %}
     <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect print-horizontal-item" for="choice-{{ id }}-{{ forloop.counter }}">
         <div class="print-only print-checkbox"></div>
-        <input type="checkbox" id="choice-{{ id }}-{{ forloop.counter }}" name="choice-{{ forloop.counter }}" class="mdl-checkbox__input">
+        <input type="checkbox" id="choice-{{ id }}-{{ forloop.counter }}" name="choice-{{ forloop.counter }}" class="mdl-checkbox__input"{% if choice in widget.value %} checked{% endif %}>
         <span class="mdl-checkbox__label choice-label">{{ choice }}</span>
     </label>
     {% endfor %}

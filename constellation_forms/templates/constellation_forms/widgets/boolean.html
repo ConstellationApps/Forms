@@ -1,6 +1,6 @@
 <h4>{{ widget.title }}</h4>
 <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="widget-{{ id }}">
     <div class="print-only print-checkbox"></div>
-    <input type="checkbox" id="widget-{{ id }}" name="value" class="mdl-switch__input">
+    <input type="checkbox" id="widget-{{ id }}" name="value" class="mdl-switch__input"{% if widget.value == "on" %} checked{% endif %}>
   <span class="mdl-switch__label">{{ widget.description }}</span>
 </label>

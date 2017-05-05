@@ -1,9 +1,9 @@
 <h4>{{ widget.title }}</h4>
 <span class="widget-description">{{ widget.description }}</span><br/>
 <div class="slider-widget">
-<input class="mdl-slider mdl-js-slider screen-only" id="widget-{{ id }}" name="value" type="range" min="0" max="{{ widget.steps }}" value="0" tabindex="0">
+    <input class="mdl-slider mdl-js-slider screen-only" id="widget-{{ id }}" name="value" type="range" min="0" max="{{ widget.steps }}" value="{{ widget.value|default:0 }}" tabindex="0">
 <div class="mdl-tooltip mdl-tooltip--large" for="widget-{{ id }}">
-    <output name="result">0</output>
+    <output name="result">{{ widget.value|default:0 }}</output>
 </div>
 </form>
 </div>

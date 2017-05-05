@@ -1,7 +1,7 @@
 <h4>{{ widget.title }}</h4>
 <span class="widget-description">{{ widget.description }}</span><br/>
 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <input class="mdl-textfield__input datefield" type="text" name="value" id="widget-{{ id }}"{% if widget.required %} required{% endif %}>
+    <input class="mdl-textfield__input datefield" type="text" name="value" id="widget-{{ id }}"{% if widget.required %} required{% endif %} value="{{ widget.value }}">
     <label class="mdl-textfield__label screen-only" for="widget-{{ id }}">{{ widget.title }}</label>
     <span class="mdl-textfield__error">{% if widget.required %}Required{% endif %}</span>
 </div>

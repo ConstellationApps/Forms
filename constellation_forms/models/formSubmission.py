@@ -30,8 +30,9 @@ class FormSubmission(models.Model):
     states = (
         (0, "draft"),
         (1, "submitted"),
-        (2, "approved"),
-        (3, "denied"),
+        (2, "changes requested"),
+        (3, "approved"),
+        (4, "denied"),
     )
 
     form = models.ForeignKey(Form)

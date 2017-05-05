@@ -35,6 +35,10 @@ urlpatterns = [
     url(r'^view/form/(?P<form_id>\d+)$', views.view_form.as_view(),
         name="view_form"),
 
+    url(r'^view/form/(?P<form_id>\d+)/(?P<submission_id>\d+)$',
+        views.view_form.as_view(),
+        name="view_form"),
+
     url(r'^view/submission/(?P<form_submission_id>\d+)$',
         views.view_form_submission.as_view(),
         name="view_form_submission"),

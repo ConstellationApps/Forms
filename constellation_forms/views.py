@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 from django.conf import settings
 from django.core import serializers
 from django.db import transaction
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import (
     HttpResponse,
     HttpResponseForbidden,
@@ -152,34 +152,50 @@ class view_form(View):
     @method_decorator(login_required)
     @method_decorator(permission_required('constellation_forms.form_visible',
                                           (Form, 'form_id', 'form_id')))
-    def get(self, request, form_id):
+    def get(self, request, form_id, submission_id=None):
         """ Returns a page that allows for the submittion of a created form """
         template_settings = GlobalTemplateSettings(allowBackground=False)
         template_settings = template_settings.settings_dict()
         form = Form.objects.filter(form_id=form_id).first()
+        submission = None
+        if submission_id:
+            submission = get_object_or_404(FormSubmission,
+                                           form__form_id=form_id,
+                                           id=submission_id,
+                                           owner=request.user,
+                                           state__lt=3)
+            for i, _ in enumerate(form.elements):
+                form.elements[i]["value"] = submission.submission[i]
 
         return render(request, 'constellation_forms/submit-form.html', {
             'form': form,
             'template_settings': template_settings,
+            'submission': submission
         })
 
     @method_decorator(permission_required_or_403(
         'constellation_forms.form_visible',
         (Form, 'form_id', 'form_id')))
-    def post(self, request, form_id):
+    def post(self, request, form_id, submission_id=None):
         """ Creates a form """
         form = Form.objects.filter(form_id=form_id).first()
         form_data = json.loads(request.POST['data'])['widgets']
         user = request.user
         state = 1  # submitted
 
-        new_submission = FormSubmission(
-            form=form,
-            owner=user,
-            state=state,
-            submission=form_data,
-            modified=timezone.now()
-        )
+        new_submission = FormSubmission()
+        if submission_id:
+            new_submission = get_object_or_404(FormSubmission,
+                                               form__form_id=form_id,
+                                               id=submission_id,
+                                               owner=request.user,
+                                               state__lt=3)
+
+        new_submission.form = form
+        new_submission.owner = user
+        new_submission.state = state
+        new_submission.submission = form_data
+        new_submission.modified = timezone.now()
         new_submission.full_clean()
         new_submission.save()
 
@@ -398,6 +414,8 @@ def list_submissions(request):
         "pk": f.pk,
         "url": reverse('constellation_forms:view_form_submission',
                        args=[f.pk]),
+        "edit": reverse('constellation_forms:view_form',
+                        args=[f.form.form_id, f.pk])
     } for f in submissions if request.user == f.owner and f.state == 1]
 
     forms[1]["list_items"] = [{

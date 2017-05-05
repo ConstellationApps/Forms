@@ -2,7 +2,7 @@
 <span class="widget-description">{{ widget.description }}</span><br/>
 <span class="widget-description print-only">You may select only one item.</span>
 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth screen-only">
-    <input class="mdl-textfield__input" type="text" id="choice-{{ id }}" name="choice-{{ id }}" tabIndex="-1"{% if widget.required %} required{% endif %}>
+    <input class="mdl-textfield__input" type="text" id="choice-{{ id }}" name="choice-{{ id }}" tabIndex="-1" value="{{ widget.value }}"{% if widget.required %} required{% endif %}>
     <label for="choice-{{ id }}">
         <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
     </label>

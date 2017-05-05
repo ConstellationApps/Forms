@@ -4,7 +4,7 @@
     {% with ''|center:widget.steps as range %}
     {% for _ in range %}
     <label class="mdl-radio mdl-js-radio star-holder" for="choice-{{ id }}-{{ forloop.revcounter }}">
-        <input type="radio" id="choice-{{ id }}-{{ forloop.revcounter }}" name="radio-{{ id }}" class="mdl-radio__button star">
+        <input type="radio" id="choice-{{ id }}-{{ forloop.revcounter }}" name="radio-{{ id }}" class="mdl-radio__button star"{% if forloop.revcounter == widget.value|first|add:"0" %} checked{% endif %}>
         <span class="mdl-radio__label choice-label" style="display:none">{{ forloop.revcounter }}</span>
     </label>
     {% endfor %}
