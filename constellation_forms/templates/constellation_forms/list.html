@@ -99,31 +99,35 @@
     <h5>{{ list.name }}</h5>
     <div class="mdl-list">
       {% for item in list.list_items %}
-      <div class="mdl-list__item">
+      <div class="mdl-list__item mdl-list__item--three-line">
         <span class="mdl-list__item-primary-content">
           {% if list_type == 'Form Submissions' %}
           {% if item.state == 0 %}
-          <i class="material-icons state-icon">drafts</i>
+          <i class="material-icons state-icon mdl-list__item-avatar">drafts</i>
           {% elif item.state == 1 %}
-          <i class="material-icons state-icon">mail_outline</i>
+          <i class="material-icons state-icon mdl-list__item-avatar">mail_outline</i>
           {% elif item.state == 2 %}
-          <i class="material-icons state-icon">call_missed_outgoing</i>
+          <i class="material-icons state-icon mdl-list__item-avatar">call_missed_outgoing</i>
           {% elif item.state == 3 %}
-          <i class="material-icons state-icon">thumb_up</i>
+          <i class="material-icons state-icon mdl-list__item-avatar">thumb_up</i>
           {% elif item.state == 4 %}
-          <i class="material-icons state-icon">thumb_down</i>
+          <i class="material-icons state-icon mdl-list__item-avatar">thumb_down</i>
           {% endif %}
+          {% else %}
+          <i class="material-icons state-icon mdl-list__item-avatar">assignment</i>
           {% endif %}
-          <a href="{{ item.url }}">{{ item.name }}</a>
+          <span><a href="{{ item.url }}">{{ item.name }}</a>{% if item.owner %} &mdash; {{ item.owner }}{% endif %}</span>
+          <span class="mdl-list__item-text-body">
+            {{ item.description }}
+          </span>
         </span>
         <span class="mdl-list__item-secondary-content">
-          {{ item.description }}
           {% if item.edit %}
-          <a href="{{ item.edit }}"><i class="material-icons">edit</i></a>
+          <a class="mdl-list__item-secondary-action" href="{{ item.edit }}"><i class="material-icons">edit</i></a>
           {% if list_type == 'Archived Forms' %}
-          <a href="{% url 'constellation_forms:view_unarchive_form' item.id %}"><i class="material-icons">unarchive</i></a>
+          <a class="mdl-list__item-secondary-action" href="{% url 'constellation_forms:view_unarchive_form' item.id %}"><i class="material-icons">unarchive</i></a>
           {% elif list_type == 'Forms' %}
-          <a href="{% url 'constellation_forms:view_archive_form' item.id %}"><i class="material-icons">archive</i></a>
+          <a class="mdl-list__item-secondary-action" href="{% url 'constellation_forms:view_archive_form' item.id %}"><i class="material-icons">archive</i></a>
           {% endif %}
           {% endif %}
         </span>
